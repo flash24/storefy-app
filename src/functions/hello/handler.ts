@@ -6,6 +6,10 @@ import schema from './schema';
 import ListModel from "../../models/list.model";
 import ResponseModel from "../../models/response.model";
 
+// logic
+const createRegister = (_name : String, ) => {
+
+}
 // Services
 import DatabaseService from "../../services/database.service";
 const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
@@ -29,7 +33,7 @@ const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) =
     console.log(params)
     // Inserts item into DynamoDB table
     // await databaseService.create(params);
-    // id = data.id 
+    // id = data.id
   } catch (error) {
     console.log(error)
   }

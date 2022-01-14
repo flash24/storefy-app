@@ -44,7 +44,7 @@ const serverlessConfiguration: AWS = {
     ]
   },
   // import the function via paths
-  functions: { ...product, order},
+  functions: { ...product, ...order},
   resources: { Resources: dynamoDbTables },
   package: { individually: true },
   custom: {

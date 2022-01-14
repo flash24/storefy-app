@@ -975,7 +975,11 @@ var require_dist = __commonJS({
 // src/functions/order/handler.ts
 var handler_exports = {};
 __export(handler_exports, {
-  main: () => main
+  createSL: () => createSL,
+  readListSL: () => readListSL,
+  readSL: () => readSL,
+  softDeleteSL: () => softDeleteSL,
+  updateSL: () => updateSL
 });
 
 // src/libs/apiGateway.ts
@@ -1032,6 +1036,9 @@ var ListModel = class {
   }
 };
 
+// src/services/database.service.ts
+var AWS = __toESM(require("aws-sdk"));
+
 // src/enums/status-code.enum.ts
 var StatusCode = /* @__PURE__ */ ((StatusCode2) => {
   StatusCode2[StatusCode2["OK"] = 200] = "OK";
@@ -1083,7 +1090,6 @@ var ResponseModel = class {
 };
 
 // src/services/database.service.ts
-var AWS = __toESM(require("aws-sdk"));
 var options = {};
 if (process.env.IS_OFFLINE) {
   options = {
@@ -1140,9 +1146,8 @@ var DatabaseService = class {
 };
 
 // src/functions/order/handler.ts
-var hello = async (event) => {
+var create = async (event) => {
   let id;
-  let response;
   try {
     const databaseService = new DatabaseService();
     const listModel = new ListModel({ name: event.body.name });
@@ -1160,16 +1165,63 @@ var hello = async (event) => {
   } catch (error) {
     console.log(error);
   }
-  response = new ResponseModel({}, 200 /* OK */, "To-do list successfully created" /* CREATE_LIST_SUCCESS */);
   return formatJSONResponse({
     message: `Hello , welcome to the exciting Serverless world! your id : ${id}`,
     event
   });
 };
-var main = middyfy(hello);
+var read = async (event) => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+  return formatJSONResponse({
+    message: `read serverless`,
+    event
+  });
+};
+var update = async (event) => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+  return formatJSONResponse({
+    message: `read serverless`,
+    event
+  });
+};
+var softDelete = async (event) => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+  return formatJSONResponse({
+    message: `read serverless`,
+    event
+  });
+};
+var readList = async (event) => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+  return formatJSONResponse({
+    message: `read serverless`,
+    event
+  });
+};
+var createSL = middyfy(create);
+var readSL = middyfy(read);
+var updateSL = middyfy(update);
+var softDeleteSL = middyfy(softDelete);
+var readListSL = middyfy(readList);
 module.exports = __toCommonJS(handler_exports);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  main
+  createSL,
+  readListSL,
+  readSL,
+  softDeleteSL,
+  updateSL
 });
 //# sourceMappingURL=handler.js.map

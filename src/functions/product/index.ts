@@ -49,7 +49,7 @@ const functions = {
       }
     ]
   },
-  updateProducts : {
+  updateProduct : {
     handler: `${handlerPath(__dirname)}/handler.updateSL`,
     events: [
       {
@@ -65,7 +65,7 @@ const functions = {
       }
     ]
   },
-  deleteProducts : {
+  deleteProduct : {
     handler: `${handlerPath(__dirname)}/handler.deleteSL`,
     events: [
       {
