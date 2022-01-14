@@ -785,6 +785,11 @@
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-4.0.1.tgz#8f80dd965ad81f3e1bc26d6f5c727e132721ff40"
   integrity sha512-Y0K95ThC3esLEYD6ZuqNek29lNX2EM1qxV8y2FTLUB0ff5wWrk7az+mLrnNFUnaXcgKye22+sFBRXOgpPILZNg==
 
+"@types/uuid@^8.3.4":
+  version "8.3.4"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
+  integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==
+
 acorn-walk@^8.1.1:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/acorn-walk/-/acorn-walk-8.2.0.tgz#741210f2e2426454508853a2f44d0ab83b7f69c1"
@@ -1016,7 +1021,7 @@ at-least-node@^1.0.0:
   resolved "https://registry.yarnpkg.com/at-least-node/-/at-least-node-1.0.0.tgz#602cd4b46e844ad4effc92a8011a3c46e0238dc2"
   integrity sha512-+q/t7Ekv1EDY2l6Gda6LLiX14rU9TV20Wa3ofeQmwPFZbOMo9DXrLbOjFaaclkXKWidIaopwAObQDqwWtGUjqg==
 
-aws-sdk@^2.1036.0, aws-sdk@^2.1053.0, aws-sdk@^2.7.0:
+aws-sdk@^2.1036.0, aws-sdk@^2.1053.0, aws-sdk@^2.1057.0, aws-sdk@^2.7.0:
   version "2.1057.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1057.0.tgz#010d01a57f4f98f445842a200221d803db4c9cc9"
   integrity sha512-vRplJBXff0+KBJLx7PJQSz2mr6TOZZl+tPD9kNx0XIKUsdMxesm8FVL6VtAI7NG1XQ7UMGcPu6Mal3+j+mrveQ==

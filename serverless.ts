@@ -1,11 +1,12 @@
 import type { AWS } from '@serverless/typescript';
-
+// DynamoDB
+import dynamoDbTables from '@configs/dynamodb-tables';
 import hello from '@functions/hello';
 
 const serverlessConfiguration: AWS = {
   service: 'aws-lambda',
   frameworkVersion: '2',
-  plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-dynamodb-local'],
+  plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-dynamodb-local', 'serverless-dotenv-plugin'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -14,15 +15,47 @@ const serverlessConfiguration: AWS = {
       shouldStartNameWithService: true,
     },
     environment: {
+      REGION: '${self:custom.region}',
+      STAGE: '${self:custom.stage}',
+      LIST_TABLE: '${self:custom.list_table}',
+      TASKS_TABLE: '${self:custom.tasks_table}',
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
     lambdaHashingVersion: '20201221',
+    iamRoleStatements: [
+      {
+        Effect: 'Allow',
+        Action: [
+            'dynamodb:DescribeTable',
+            'dynamodb:Query',
+            'dynamodb:Scan',
+            'dynamodb:GetItem',
+            'dynamodb:PutItem',
+            'dynamodb:UpdateItem',
+            'dynamodb:DeleteItem'
+        ],
+        Resource: [
+          {"Fn::GetAtt": [ 'ListTable', 'Arn' ]},
+          {"Fn::GetAtt": [ 'TasksTable', 'Arn' ]}
+        ]
+      }
+    ]
   },
   // import the function via paths
   functions: { hello },
+  resources: { Resources: dynamoDbTables },
   package: { individually: true },
   custom: {
+    region: '${opt:region, self:provider.region}',
+    stage: '${opt:stage, self:provider.stage}',
+    list_table: '${self:service}-list-table-${opt:stage, self:provider.stage}',
+    tasks_table: '${self:service}-tasks-table-${opt:stage, self:provider.stage}',
+    table_throughputs: {
+      prod: 5,
+      default: 1,
+    },
+    table_throughput: '${self:custom.TABLE_THROUGHPUTS.${self:custom.stage}, self:custom.table_throughputs.default}',
     dynamodb: {
       stages: ['dev'],
       start: {
