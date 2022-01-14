@@ -1,1 +1,3 @@
-export { default as hello } from './hello';
+import product from './product';
+import order from './order';
+export {product, order } ;

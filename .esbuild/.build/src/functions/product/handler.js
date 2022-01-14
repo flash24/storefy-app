@@ -972,7 +972,7 @@ var require_dist = __commonJS({
   }
 });
 
-// src/functions/hello/handler.ts
+// src/functions/product/handler.ts
 var handler_exports = {};
 __export(handler_exports, {
   main: () => main
@@ -1141,7 +1141,7 @@ var DatabaseService = class {
   }
 };
 
-// src/functions/hello/handler.ts
+// src/functions/product/handler.ts
 var hello = async (event) => {
   let id;
   try {
