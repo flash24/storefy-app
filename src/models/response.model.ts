@@ -13,18 +13,9 @@ interface IResponse {
 }
 
 // Enums
-
-enum Status {
-    SUCCESS = 'success',
-    ERROR = 'error',
-    BAD_REQUEST = 'bad request',
-}
-
-const STATUS_MESSAGES = {
-    200: Status.SUCCESS,
-    400: Status.BAD_REQUEST,
-    500: Status.ERROR,
-}
+// Enums
+import { Status } from '../enums/status.enum';
+import { StatusCode } from '../enums/status-code.enum';
 
 const RESPONSE_HEADERS: ResponseHeader = {
     'Content-Type': 'application/json',
@@ -49,7 +40,7 @@ export default class ResponseModel {
         this.body = {
             data: data,
             message: message,
-            status: STATUS_MESSAGES[code],
+            status: StatusCode[code],
         };
         this.code = code;
     }
