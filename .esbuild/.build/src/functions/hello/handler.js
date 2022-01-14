@@ -244,30 +244,30 @@ var require_util = __commonJS({
         })
       }
     };
-    var createPrefetchClient = (options) => {
-      const awsClientOptions = __spreadValues(__spreadValues({}, awsClientDefaultOptions), options.awsClientOptions);
-      const client = new options.AwsClient(awsClientOptions);
-      if (options.awsClientCapture) {
-        return options.awsClientCapture(client);
+    var createPrefetchClient = (options2) => {
+      const awsClientOptions = __spreadValues(__spreadValues({}, awsClientDefaultOptions), options2.awsClientOptions);
+      const client = new options2.AwsClient(awsClientOptions);
+      if (options2.awsClientCapture) {
+        return options2.awsClientCapture(client);
       }
       return client;
     };
-    var createClient = async (options, request) => {
+    var createClient = async (options2, request) => {
       let awsClientCredentials = {};
-      if (options.awsClientAssumeRole) {
+      if (options2.awsClientAssumeRole) {
         if (!request)
           throw new Error("Request required when assuming role");
         awsClientCredentials = await getInternal({
-          credentials: options.awsClientAssumeRole
+          credentials: options2.awsClientAssumeRole
         }, request);
       }
-      awsClientCredentials = __spreadValues(__spreadValues({}, awsClientCredentials), options.awsClientOptions);
-      return createPrefetchClient(__spreadProps(__spreadValues({}, options), {
+      awsClientCredentials = __spreadValues(__spreadValues({}, awsClientCredentials), options2.awsClientOptions);
+      return createPrefetchClient(__spreadProps(__spreadValues({}, options2), {
         awsClientOptions: awsClientCredentials
       }));
     };
-    var canPrefetch = (options) => {
-      return !(options !== null && options !== void 0 && options.awsClientAssumeRole) && !(options !== null && options !== void 0 && options.disablePrefetch);
+    var canPrefetch = (options2) => {
+      return !(options2 !== null && options2 !== void 0 && options2.awsClientAssumeRole) && !(options2 !== null && options2 !== void 0 && options2.disablePrefetch);
     };
     var getInternal = async (variables, request) => {
       if (!variables || !request)
@@ -309,11 +309,11 @@ var require_util = __commonJS({
       return key.replace(sanitizeKeyPrefixLeadingNumber, "_$1").replace(sanitizeKeyRemoveDisallowedChar, "_");
     };
     var cache = {};
-    var processCache = (options, fetch = () => void 0, request) => {
+    var processCache = (options2, fetch = () => void 0, request) => {
       const {
         cacheExpiry,
         cacheKey
-      } = options;
+      } = options2;
       if (cacheExpiry) {
         const cached = getCache(cacheKey);
         const unexpired = cached && (cacheExpiry < 0 || cached.expiry > Date.now());
@@ -452,7 +452,7 @@ var require_http_json_body_parser = __commonJS({
       reviver: void 0
     };
     var httpJsonBodyParserMiddleware = (opts = {}) => {
-      const options = __spreadValues(__spreadValues({}, defaults), opts);
+      const options2 = __spreadValues(__spreadValues({}, defaults), opts);
       const httpJsonBodyParserMiddlewareBefore = async (request) => {
         var _headers$ContentType;
         const {
@@ -464,7 +464,7 @@ var require_http_json_body_parser = __commonJS({
           try {
             const data = request.event.isBase64Encoded ? Buffer.from(body, "base64").toString() : body;
             request.event.rawBody = body;
-            request.event.body = JSON.parse(data, options.reviver);
+            request.event.body = JSON.parse(data, options2.reviver);
           } catch (err) {
             const {
               createError
@@ -478,6 +478,497 @@ var require_http_json_body_parser = __commonJS({
       };
     };
     module2.exports = httpJsonBodyParserMiddleware;
+  }
+});
+
+// node_modules/uuid/dist/rng.js
+var require_rng = __commonJS({
+  "node_modules/uuid/dist/rng.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = rng;
+    var _crypto = _interopRequireDefault(require("crypto"));
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var rnds8Pool = new Uint8Array(256);
+    var poolPtr = rnds8Pool.length;
+    function rng() {
+      if (poolPtr > rnds8Pool.length - 16) {
+        _crypto.default.randomFillSync(rnds8Pool);
+        poolPtr = 0;
+      }
+      return rnds8Pool.slice(poolPtr, poolPtr += 16);
+    }
+  }
+});
+
+// node_modules/uuid/dist/regex.js
+var require_regex = __commonJS({
+  "node_modules/uuid/dist/regex.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/validate.js
+var require_validate = __commonJS({
+  "node_modules/uuid/dist/validate.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _regex = _interopRequireDefault(require_regex());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function validate2(uuid2) {
+      return typeof uuid2 === "string" && _regex.default.test(uuid2);
+    }
+    var _default = validate2;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/stringify.js
+var require_stringify = __commonJS({
+  "node_modules/uuid/dist/stringify.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _validate = _interopRequireDefault(require_validate());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var byteToHex = [];
+    for (let i = 0; i < 256; ++i) {
+      byteToHex.push((i + 256).toString(16).substr(1));
+    }
+    function stringify2(arr, offset = 0) {
+      const uuid2 = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+      if (!(0, _validate.default)(uuid2)) {
+        throw TypeError("Stringified UUID is invalid");
+      }
+      return uuid2;
+    }
+    var _default = stringify2;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/v1.js
+var require_v1 = __commonJS({
+  "node_modules/uuid/dist/v1.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _rng = _interopRequireDefault(require_rng());
+    var _stringify = _interopRequireDefault(require_stringify());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var _nodeId;
+    var _clockseq;
+    var _lastMSecs = 0;
+    var _lastNSecs = 0;
+    function v12(options2, buf, offset) {
+      let i = buf && offset || 0;
+      const b = buf || new Array(16);
+      options2 = options2 || {};
+      let node = options2.node || _nodeId;
+      let clockseq = options2.clockseq !== void 0 ? options2.clockseq : _clockseq;
+      if (node == null || clockseq == null) {
+        const seedBytes = options2.random || (options2.rng || _rng.default)();
+        if (node == null) {
+          node = _nodeId = [seedBytes[0] | 1, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
+        }
+        if (clockseq == null) {
+          clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 16383;
+        }
+      }
+      let msecs = options2.msecs !== void 0 ? options2.msecs : Date.now();
+      let nsecs = options2.nsecs !== void 0 ? options2.nsecs : _lastNSecs + 1;
+      const dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 1e4;
+      if (dt < 0 && options2.clockseq === void 0) {
+        clockseq = clockseq + 1 & 16383;
+      }
+      if ((dt < 0 || msecs > _lastMSecs) && options2.nsecs === void 0) {
+        nsecs = 0;
+      }
+      if (nsecs >= 1e4) {
+        throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");
+      }
+      _lastMSecs = msecs;
+      _lastNSecs = nsecs;
+      _clockseq = clockseq;
+      msecs += 122192928e5;
+      const tl = ((msecs & 268435455) * 1e4 + nsecs) % 4294967296;
+      b[i++] = tl >>> 24 & 255;
+      b[i++] = tl >>> 16 & 255;
+      b[i++] = tl >>> 8 & 255;
+      b[i++] = tl & 255;
+      const tmh = msecs / 4294967296 * 1e4 & 268435455;
+      b[i++] = tmh >>> 8 & 255;
+      b[i++] = tmh & 255;
+      b[i++] = tmh >>> 24 & 15 | 16;
+      b[i++] = tmh >>> 16 & 255;
+      b[i++] = clockseq >>> 8 | 128;
+      b[i++] = clockseq & 255;
+      for (let n = 0; n < 6; ++n) {
+        b[i + n] = node[n];
+      }
+      return buf || (0, _stringify.default)(b);
+    }
+    var _default = v12;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/parse.js
+var require_parse = __commonJS({
+  "node_modules/uuid/dist/parse.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _validate = _interopRequireDefault(require_validate());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function parse2(uuid2) {
+      if (!(0, _validate.default)(uuid2)) {
+        throw TypeError("Invalid UUID");
+      }
+      let v;
+      const arr = new Uint8Array(16);
+      arr[0] = (v = parseInt(uuid2.slice(0, 8), 16)) >>> 24;
+      arr[1] = v >>> 16 & 255;
+      arr[2] = v >>> 8 & 255;
+      arr[3] = v & 255;
+      arr[4] = (v = parseInt(uuid2.slice(9, 13), 16)) >>> 8;
+      arr[5] = v & 255;
+      arr[6] = (v = parseInt(uuid2.slice(14, 18), 16)) >>> 8;
+      arr[7] = v & 255;
+      arr[8] = (v = parseInt(uuid2.slice(19, 23), 16)) >>> 8;
+      arr[9] = v & 255;
+      arr[10] = (v = parseInt(uuid2.slice(24, 36), 16)) / 1099511627776 & 255;
+      arr[11] = v / 4294967296 & 255;
+      arr[12] = v >>> 24 & 255;
+      arr[13] = v >>> 16 & 255;
+      arr[14] = v >>> 8 & 255;
+      arr[15] = v & 255;
+      return arr;
+    }
+    var _default = parse2;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/v35.js
+var require_v35 = __commonJS({
+  "node_modules/uuid/dist/v35.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = _default;
+    exports.URL = exports.DNS = void 0;
+    var _stringify = _interopRequireDefault(require_stringify());
+    var _parse = _interopRequireDefault(require_parse());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function stringToBytes(str) {
+      str = unescape(encodeURIComponent(str));
+      const bytes = [];
+      for (let i = 0; i < str.length; ++i) {
+        bytes.push(str.charCodeAt(i));
+      }
+      return bytes;
+    }
+    var DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
+    exports.DNS = DNS;
+    var URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
+    exports.URL = URL;
+    function _default(name, version2, hashfunc) {
+      function generateUUID(value, namespace, buf, offset) {
+        if (typeof value === "string") {
+          value = stringToBytes(value);
+        }
+        if (typeof namespace === "string") {
+          namespace = (0, _parse.default)(namespace);
+        }
+        if (namespace.length !== 16) {
+          throw TypeError("Namespace must be array-like (16 iterable integer values, 0-255)");
+        }
+        let bytes = new Uint8Array(16 + value.length);
+        bytes.set(namespace);
+        bytes.set(value, namespace.length);
+        bytes = hashfunc(bytes);
+        bytes[6] = bytes[6] & 15 | version2;
+        bytes[8] = bytes[8] & 63 | 128;
+        if (buf) {
+          offset = offset || 0;
+          for (let i = 0; i < 16; ++i) {
+            buf[offset + i] = bytes[i];
+          }
+          return buf;
+        }
+        return (0, _stringify.default)(bytes);
+      }
+      try {
+        generateUUID.name = name;
+      } catch (err) {
+      }
+      generateUUID.DNS = DNS;
+      generateUUID.URL = URL;
+      return generateUUID;
+    }
+  }
+});
+
+// node_modules/uuid/dist/md5.js
+var require_md5 = __commonJS({
+  "node_modules/uuid/dist/md5.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _crypto = _interopRequireDefault(require("crypto"));
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function md5(bytes) {
+      if (Array.isArray(bytes)) {
+        bytes = Buffer.from(bytes);
+      } else if (typeof bytes === "string") {
+        bytes = Buffer.from(bytes, "utf8");
+      }
+      return _crypto.default.createHash("md5").update(bytes).digest();
+    }
+    var _default = md5;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/v3.js
+var require_v3 = __commonJS({
+  "node_modules/uuid/dist/v3.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _v = _interopRequireDefault(require_v35());
+    var _md = _interopRequireDefault(require_md5());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var v32 = (0, _v.default)("v3", 48, _md.default);
+    var _default = v32;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/v4.js
+var require_v4 = __commonJS({
+  "node_modules/uuid/dist/v4.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _rng = _interopRequireDefault(require_rng());
+    var _stringify = _interopRequireDefault(require_stringify());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function v42(options2, buf, offset) {
+      options2 = options2 || {};
+      const rnds = options2.random || (options2.rng || _rng.default)();
+      rnds[6] = rnds[6] & 15 | 64;
+      rnds[8] = rnds[8] & 63 | 128;
+      if (buf) {
+        offset = offset || 0;
+        for (let i = 0; i < 16; ++i) {
+          buf[offset + i] = rnds[i];
+        }
+        return buf;
+      }
+      return (0, _stringify.default)(rnds);
+    }
+    var _default = v42;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/sha1.js
+var require_sha1 = __commonJS({
+  "node_modules/uuid/dist/sha1.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _crypto = _interopRequireDefault(require("crypto"));
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function sha1(bytes) {
+      if (Array.isArray(bytes)) {
+        bytes = Buffer.from(bytes);
+      } else if (typeof bytes === "string") {
+        bytes = Buffer.from(bytes, "utf8");
+      }
+      return _crypto.default.createHash("sha1").update(bytes).digest();
+    }
+    var _default = sha1;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/v5.js
+var require_v5 = __commonJS({
+  "node_modules/uuid/dist/v5.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _v = _interopRequireDefault(require_v35());
+    var _sha = _interopRequireDefault(require_sha1());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var v52 = (0, _v.default)("v5", 80, _sha.default);
+    var _default = v52;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/nil.js
+var require_nil = __commonJS({
+  "node_modules/uuid/dist/nil.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _default = "00000000-0000-0000-0000-000000000000";
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/version.js
+var require_version = __commonJS({
+  "node_modules/uuid/dist/version.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _validate = _interopRequireDefault(require_validate());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function version2(uuid2) {
+      if (!(0, _validate.default)(uuid2)) {
+        throw TypeError("Invalid UUID");
+      }
+      return parseInt(uuid2.substr(14, 1), 16);
+    }
+    var _default = version2;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/index.js
+var require_dist = __commonJS({
+  "node_modules/uuid/dist/index.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    Object.defineProperty(exports, "v1", {
+      enumerable: true,
+      get: function() {
+        return _v.default;
+      }
+    });
+    Object.defineProperty(exports, "v3", {
+      enumerable: true,
+      get: function() {
+        return _v2.default;
+      }
+    });
+    Object.defineProperty(exports, "v4", {
+      enumerable: true,
+      get: function() {
+        return _v3.default;
+      }
+    });
+    Object.defineProperty(exports, "v5", {
+      enumerable: true,
+      get: function() {
+        return _v4.default;
+      }
+    });
+    Object.defineProperty(exports, "NIL", {
+      enumerable: true,
+      get: function() {
+        return _nil.default;
+      }
+    });
+    Object.defineProperty(exports, "version", {
+      enumerable: true,
+      get: function() {
+        return _version.default;
+      }
+    });
+    Object.defineProperty(exports, "validate", {
+      enumerable: true,
+      get: function() {
+        return _validate.default;
+      }
+    });
+    Object.defineProperty(exports, "stringify", {
+      enumerable: true,
+      get: function() {
+        return _stringify.default;
+      }
+    });
+    Object.defineProperty(exports, "parse", {
+      enumerable: true,
+      get: function() {
+        return _parse.default;
+      }
+    });
+    var _v = _interopRequireDefault(require_v1());
+    var _v2 = _interopRequireDefault(require_v3());
+    var _v3 = _interopRequireDefault(require_v4());
+    var _v4 = _interopRequireDefault(require_v5());
+    var _nil = _interopRequireDefault(require_nil());
+    var _version = _interopRequireDefault(require_version());
+    var _validate = _interopRequireDefault(require_validate());
+    var _stringify = _interopRequireDefault(require_stringify());
+    var _parse = _interopRequireDefault(require_parse());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
   }
 });
 
@@ -502,10 +993,179 @@ var middyfy = (handler) => {
   return (0, import_core.default)(handler).use((0, import_http_json_body_parser.default)());
 };
 
+// node_modules/uuid/wrapper.mjs
+var import_dist = __toESM(require_dist(), 1);
+var v1 = import_dist.default.v1;
+var v3 = import_dist.default.v3;
+var v4 = import_dist.default.v4;
+var v5 = import_dist.default.v5;
+var NIL = import_dist.default.NIL;
+var version = import_dist.default.version;
+var validate = import_dist.default.validate;
+var stringify = import_dist.default.stringify;
+var parse = import_dist.default.parse;
+
+// src/models/list.model.ts
+var ListModel = class {
+  constructor({ id = v4(), name = "" }) {
+    this._id = id;
+    this._name = name;
+  }
+  setId(value) {
+    this._id = value !== "" ? value : null;
+  }
+  getId() {
+    return this._id;
+  }
+  setName(value) {
+    this._name = value !== "" ? value : null;
+  }
+  getName() {
+    return this._name;
+  }
+  getEntityMappings() {
+    return {
+      id: this.getId(),
+      name: this.getName(),
+      timestamp: new Date().getTime()
+    };
+  }
+};
+
+// src/services/database.service.ts
+var AWS = __toESM(require("aws-sdk"));
+
+// src/enums/status-code.enum.ts
+var StatusCode = /* @__PURE__ */ ((StatusCode2) => {
+  StatusCode2[StatusCode2["OK"] = 200] = "OK";
+  StatusCode2[StatusCode2["ERROR"] = 500] = "ERROR";
+  StatusCode2[StatusCode2["BAD_REQUEST"] = 400] = "BAD_REQUEST";
+  return StatusCode2;
+})(StatusCode || {});
+
+// src/models/response.model.ts
+var RESPONSE_HEADERS = {
+  "Content-Type": "application/json",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Credentials": true
+};
+var ResponseModel = class {
+  constructor(data = {}, code = 402, message = "") {
+    this.setBodyVariable = (variable, value) => {
+      this.body[variable] = value;
+    };
+    this.setData = (data) => {
+      this.body.data = data;
+    };
+    this.setCode = (code) => {
+      this.code = code;
+    };
+    this.getCode = () => {
+      return this.code;
+    };
+    this.setMessage = (message) => {
+      this.body.message = message;
+    };
+    this.getMessage = () => {
+      return this.body.message;
+    };
+    this.generate = () => {
+      return {
+        statusCode: this.code,
+        headers: RESPONSE_HEADERS,
+        body: JSON.stringify(this.body)
+      };
+    };
+    this.body = {
+      data,
+      message,
+      status: StatusCode[code]
+    };
+    this.code = code;
+  }
+};
+
+// src/services/database.service.ts
+var options = {};
+if (process.env.IS_OFFLINE) {
+  options = {
+    region: "localhost",
+    endpoint: "http://localhost:8000"
+  };
+}
+var documentClient = new AWS.DynamoDB.DocumentClient(options);
+var DatabaseService = class {
+  constructor() {
+    this.create = async (params) => {
+      try {
+        return await documentClient.put(params).promise();
+      } catch (error) {
+        throw new ResponseModel({}, 500, `create-error: ${error}`);
+      }
+    };
+    this.batchCreate = async (params) => {
+      try {
+        return await documentClient.batchWrite(params).promise();
+      } catch (error) {
+        throw new ResponseModel({}, 500, `batch-write-error: ${error}`);
+      }
+    };
+    this.update = async (params) => {
+      try {
+        return await documentClient.update(params).promise();
+      } catch (error) {
+        throw new ResponseModel({}, 500, `update-error: ${error}`);
+      }
+    };
+    this.query = async (params) => {
+      try {
+        return await documentClient.query(params).promise();
+      } catch (error) {
+        throw new ResponseModel({}, 500, `query-error: ${error}`);
+      }
+    };
+    this.get = async (params) => {
+      try {
+        return await documentClient.get(params).promise();
+      } catch (error) {
+        throw new ResponseModel({}, 500, `get-error: ${error}`);
+      }
+    };
+    this.delete = async (params) => {
+      try {
+        return await documentClient.delete(params).promise();
+      } catch (error) {
+        throw new ResponseModel({}, 500, `delete-error: ${error}`);
+      }
+    };
+  }
+};
+
 // src/functions/hello/handler.ts
 var hello = async (event) => {
+  let id;
+  try {
+    const databaseService = new DatabaseService();
+    console.log({ name: event.body.name });
+    const listModel = new ListModel({ name: "nuevo nomber" });
+    const data = listModel.getEntityMappings();
+    const params = {
+      TableName: process.env.LIST_TABLE,
+      Item: {
+        id: data.id,
+        name: data.name,
+        createdAt: data.timestamp,
+        updatedAt: data.timestamp
+      }
+    };
+    console.log(params);
+    await databaseService.create(params);
+    id = data.id;
+  } catch (error) {
+    console.log(error);
+  }
   return formatJSONResponse({
-    message: `Hello , welcome to the exciting Serverless world!`,
+    message: `Hello , welcome to the exciting Serverless world! your id : ${id}`,
     event
   });
 };

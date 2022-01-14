@@ -36,17 +36,25 @@ type DeleteItemOutput = AWS.DynamoDB.DocumentClient.DeleteItemOutput;
 
 type Item = {[index: string]: string};
 
-const config: IConfig = { region: "eu-west-1" };
-if (process.env.STAGE === process.env.DYNAMODB_LOCAL_STAGE) {
-    config.accessKeyId = process.env.DYNAMODB_LOCAL_ACCESS_KEY_ID; 
-    config.secretAccessKey = process.env.DYNAMODB_LOCAL_SECRET_ACCESS_KEY; 
-    config.endpoint = process.env.DYNAMODB_LOCAL_ENDPOINT;
+// const config: IConfig = { region: "eu-west-1" };
+// // if (process.env.STAGE === process.env.DYNAMODB_LOCAL_STAGE) {
+//     config.accessKeyId = process.env.DYNAMODB_LOCAL_ACCESS_KEY_ID; 
+//     config.secretAccessKey = process.env.DYNAMODB_LOCAL_SECRET_ACCESS_KEY; 
+//     config.endpoint = process.env.DYNAMODB_LOCAL_ENDPOINT;
+// // }
+
+// AWS.config.update({ region: "eu-west-1" });
+
+// const documentClient = new AWS.DynamoDB.DocumentClient();
+let options = {};
+if (process.env.IS_OFFLINE) {
+    options = {
+        region: 'localhost',
+        endpoint: 'http://localhost:8000',
+    };
 }
 
-AWS.config.update({ region: "eu-west-1" });
-
-const documentClient = new AWS.DynamoDB.DocumentClient();
-
+const documentClient = new AWS.DynamoDB.DocumentClient(options);
 export default class DatabaseService {
 
     create = async(params: PutItem): Promise<PutItemOutput> => {
