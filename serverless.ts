@@ -1,7 +1,6 @@
 import type { AWS } from '@serverless/typescript';
 // DynamoDB
 import dynamoDbTables from '@configs/dynamodb-tables';
-import hello from '@functions/hello';
 import product from '@functions/product';
 import order from '@functions/order';
 
@@ -45,7 +44,7 @@ const serverlessConfiguration: AWS = {
     ]
   },
   // import the function via paths
-  functions: { hello, ...product, order},
+  functions: { ...product, order},
   resources: { Resources: dynamoDbTables },
   package: { individually: true },
   custom: {

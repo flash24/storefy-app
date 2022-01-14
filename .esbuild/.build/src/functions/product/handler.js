@@ -976,8 +976,10 @@ var require_dist = __commonJS({
 var handler_exports = {};
 __export(handler_exports, {
   createSL: () => createSL,
+  deleteSL: () => deleteSL,
   readListSL: () => readListSL,
-  readSL: () => readSL
+  readSL: () => readSL,
+  updateSL: () => updateSL
 });
 
 // src/libs/apiGateway.ts
@@ -1178,6 +1180,26 @@ var read = async (event) => {
     event
   });
 };
+var update = async (event) => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+  return formatJSONResponse({
+    message: `read serverless`,
+    event
+  });
+};
+var deleteP = async (event) => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+  return formatJSONResponse({
+    message: `read serverless`,
+    event
+  });
+};
 var readList = async (event) => {
   try {
   } catch (error) {
@@ -1190,12 +1212,16 @@ var readList = async (event) => {
 };
 var createSL = middyfy(create);
 var readSL = middyfy(read);
+var updateSL = middyfy(update);
+var deleteSL = middyfy(deleteP);
 var readListSL = middyfy(readList);
 module.exports = __toCommonJS(handler_exports);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   createSL,
+  deleteSL,
   readListSL,
-  readSL
+  readSL,
+  updateSL
 });
 //# sourceMappingURL=handler.js.map

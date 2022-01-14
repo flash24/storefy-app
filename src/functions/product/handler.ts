@@ -71,6 +71,68 @@ const read: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) =>
     event,
   });
 }
+const update: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+  try {
+    // const databaseService = new DatabaseService();
+    // const listModel = new ListModel({name:event.body.name});
+    // // Get model data
+    // const data = listModel.getEntityMappings();
+          
+    // // Initialise DynamoDB PUT parameters
+    // const params = {
+    //     TableName: process.env.LIST_TABLE,
+    //     Item: {
+    //         id: data.id,
+    //         name: data.name,
+    //         createdAt: data.timestamp,
+    //         updatedAt: data.timestamp,
+    //     }
+    // }
+    // console.log(params)
+    // Inserts item into DynamoDB table
+    // await databaseService.create(params);
+    // id = data.id 
+  } catch (error) {
+    console.log(error)
+  }
+
+  // return data.id;
+  return formatJSONResponse({
+    message: `read serverless`,
+    event,
+  });
+}
+const deleteP: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+  try {
+    // const databaseService = new DatabaseService();
+    // const listModel = new ListModel({name:event.body.name});
+    // // Get model data
+    // const data = listModel.getEntityMappings();
+          
+    // // Initialise DynamoDB PUT parameters
+    // const params = {
+    //     TableName: process.env.LIST_TABLE,
+    //     Item: {
+    //         id: data.id,
+    //         name: data.name,
+    //         createdAt: data.timestamp,
+    //         updatedAt: data.timestamp,
+    //     }
+    // }
+    // console.log(params)
+    // Inserts item into DynamoDB table
+    // await databaseService.create(params);
+    // id = data.id 
+  } catch (error) {
+    console.log(error)
+  }
+
+  // return data.id;
+  return formatJSONResponse({
+    message: `read serverless`,
+    event,
+  });
+}
 const readList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   try {
     // const databaseService = new DatabaseService();
@@ -102,15 +164,10 @@ const readList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event
     event,
   });
 }
-// const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-//   return formatJSONResponse({
-//     message: `Hello ${event.body.name}, welcome to the exciting Serverless world!`,
-//     event,
-//   });
-// }
 const createSL = middyfy(create);
 const readSL = middyfy(read);
+const updateSL = middyfy(update);
+const deleteSL = middyfy(deleteP);
 const readListSL = middyfy(readList);
-// const main = middyfy(read);
 
-export {createSL, readSL, readListSL}
+export {createSL, readSL, readListSL, updateSL, deleteSL}

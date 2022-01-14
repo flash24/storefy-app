@@ -7,7 +7,7 @@ const functions = {
       {
         http: {
           method: 'post',
-          path: 'product/create',
+          path: 'product',
           request: {
             schemas: {
               'application/json': schema
@@ -40,6 +40,38 @@ const functions = {
         http: {
           method: 'get',
           path: 'product/list',
+          request: {
+            schemas: {
+              'application/json': schema
+            }
+          }
+        }
+      }
+    ]
+  },
+  updateProducts : {
+    handler: `${handlerPath(__dirname)}/handler.updateSL`,
+    events: [
+      {
+        http: {
+          method: 'put',
+          path: 'product',
+          request: {
+            schemas: {
+              'application/json': schema
+            }
+          }
+        }
+      }
+    ]
+  },
+  deleteProducts : {
+    handler: `${handlerPath(__dirname)}/handler.deleteSL`,
+    events: [
+      {
+        http: {
+          method: 'delete',
+          path: 'product',
           request: {
             schemas: {
               'application/json': schema
