@@ -972,12 +972,10 @@ var require_dist = __commonJS({
   }
 });
 
-// src/functions/product/handler.ts
+// src/functions/order/handler.ts
 var handler_exports = {};
 __export(handler_exports, {
-  createSL: () => createSL,
-  readListSL: () => readListSL,
-  readSL: () => readSL
+  main: () => main
 });
 
 // src/libs/apiGateway.ts
@@ -1034,9 +1032,6 @@ var ListModel = class {
   }
 };
 
-// src/services/database.service.ts
-var AWS = __toESM(require("aws-sdk"));
-
 // src/enums/status-code.enum.ts
 var StatusCode = /* @__PURE__ */ ((StatusCode2) => {
   StatusCode2[StatusCode2["OK"] = 200] = "OK";
@@ -1088,6 +1083,7 @@ var ResponseModel = class {
 };
 
 // src/services/database.service.ts
+var AWS = __toESM(require("aws-sdk"));
 var options = {};
 if (process.env.IS_OFFLINE) {
   options = {
@@ -1143,9 +1139,10 @@ var DatabaseService = class {
   }
 };
 
-// src/functions/product/handler.ts
-var create = async (event) => {
+// src/functions/order/handler.ts
+var hello = async (event) => {
   let id;
+  let response;
   try {
     const databaseService = new DatabaseService();
     const listModel = new ListModel({ name: event.body.name });
@@ -1163,39 +1160,16 @@ var create = async (event) => {
   } catch (error) {
     console.log(error);
   }
+  response = new ResponseModel({}, 200 /* OK */, "To-do list successfully created" /* CREATE_LIST_SUCCESS */);
   return formatJSONResponse({
     message: `Hello , welcome to the exciting Serverless world! your id : ${id}`,
     event
   });
 };
-var read = async (event) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-  return formatJSONResponse({
-    message: `read serverless`,
-    event
-  });
-};
-var readList = async (event) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-  return formatJSONResponse({
-    message: `read serverless`,
-    event
-  });
-};
-var createSL = middyfy(create);
-var readSL = middyfy(read);
-var readListSL = middyfy(readList);
+var main = middyfy(hello);
 module.exports = __toCommonJS(handler_exports);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  createSL,
-  readListSL,
-  readSL
+  main
 });
 //# sourceMappingURL=handler.js.map

@@ -6,10 +6,15 @@ import schema from './schema';
 import ListModel from "../../models/list.model";
 import ResponseModel from "../../models/response.model";
 
+// Enums
+import { StatusCode } from "../../enums/status-code.enum";
+import { ResponseMessage } from "../../enums/response-message.enum";
+
 // Services
 import DatabaseService from "../../services/database.service";
 const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   let id: String;
+  let response;
   try {
     const databaseService = new DatabaseService();
     const listModel = new ListModel({name:event.body.name});
@@ -33,7 +38,7 @@ const hello: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) =
   } catch (error) {
     console.log(error)
   }
-
+  response = new ResponseModel({  }, StatusCode.OK, ResponseMessage.CREATE_LIST_SUCCESS);
   // return data.id;
   return formatJSONResponse({
     message: `Hello , welcome to the exciting Serverless world! your id : ${id}`,
