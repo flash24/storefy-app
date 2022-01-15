@@ -2,17 +2,17 @@ import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/apiGateway';
 import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
 
-import schema from './schema';
+import {createSchema} from './schema';
 import ListModel from "../../models/list.model";
 import ResponseModel from "../../models/response.model";
 
 // Services
 import DatabaseService from "../../services/database.service";
-const create: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const create: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
   let id: String;
   try {
     const databaseService = new DatabaseService();
-    const listModel = new ListModel({name:event.body.name});
+    const listModel = new ListModel({name:""});
     // Get model data
     const data = listModel.getEntityMappings();
           
@@ -40,7 +40,7 @@ const create: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) 
     event,
   });
 }
-const read: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const read: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
   try {
     // const databaseService = new DatabaseService();
     // const listModel = new ListModel({name:event.body.name});
@@ -71,7 +71,7 @@ const read: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) =>
     event,
   });
 }
-const update: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const update: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
   try {
     // const databaseService = new DatabaseService();
     // const listModel = new ListModel({name:event.body.name});
@@ -102,7 +102,7 @@ const update: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) 
     event,
   });
 }
-const softDelete: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const softDelete: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
   try {
     // const databaseService = new DatabaseService();
     // const listModel = new ListModel({name:event.body.name});
@@ -133,7 +133,7 @@ const softDelete: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
     event,
   });
 }
-const readList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
+const readList: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
   try {
     // const databaseService = new DatabaseService();
     // const listModel = new ListModel({name:event.body.name});

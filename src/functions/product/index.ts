@@ -1,4 +1,4 @@
-import schema from './schema';
+import {createSchema} from './schema';
 import { handlerPath } from '@libs/handlerResolver';
 const functions = {
   createProduct : {
@@ -10,7 +10,7 @@ const functions = {
           path: 'product',
           request: {
             schemas: {
-              'application/json': schema
+              'application/json': createSchema
             }
           }
         }
@@ -26,7 +26,7 @@ const functions = {
           path: 'product',
           request: {
             schemas: {
-              'application/json': schema
+              'application/json': {}
             }
           }
         }
@@ -42,7 +42,7 @@ const functions = {
           path: 'product/list',
           request: {
             schemas: {
-              'application/json': schema
+              'application/json': {}
             }
           }
         }
@@ -58,7 +58,7 @@ const functions = {
           path: 'product',
           request: {
             schemas: {
-              'application/json': schema
+              'application/json': {}
             }
           }
         }
@@ -74,7 +74,7 @@ const functions = {
           path: 'product',
           request: {
             schemas: {
-              'application/json': schema
+              'application/json': {}
             }
           }
         }

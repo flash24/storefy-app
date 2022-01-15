@@ -18,6 +18,7 @@ const serverlessConfiguration: AWS = {
     environment: {
       REGION: '${self:custom.region}',
       STAGE: '${self:custom.stage}',
+      PRODUCT_TABLE: '${self:custom.product_table}',
       LIST_TABLE: '${self:custom.list_table}',
       TASKS_TABLE: '${self:custom.tasks_table}',
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
@@ -50,6 +51,7 @@ const serverlessConfiguration: AWS = {
   custom: {
     region: '${opt:region, self:provider.region}',
     stage: '${opt:stage, self:provider.stage}',
+    product_table: '${self:service}-product-table-${opt:stage, self:provider.stage}',
     list_table: '${self:service}-list-table-${opt:stage, self:provider.stage}',
     tasks_table: '${self:service}-tasks-table-${opt:stage, self:provider.stage}',
     table_throughputs: {

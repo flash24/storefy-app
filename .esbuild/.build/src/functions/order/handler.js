@@ -1150,7 +1150,7 @@ var create = async (event) => {
   let id;
   try {
     const databaseService = new DatabaseService();
-    const listModel = new ListModel({ name: event.body.name });
+    const listModel = new ListModel({ name: "" });
     const data = listModel.getEntityMappings();
     const params = {
       TableName: process.env.LIST_TABLE,
