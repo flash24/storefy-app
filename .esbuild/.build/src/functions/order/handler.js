@@ -2186,8 +2186,8 @@ var update = async (event) => {
       },
       ExpressionAttributeValues: {
         ":items": dataRequest.items,
-        ":date": dataRequest.date,
-        ":status": dataRequest.status,
+        ":date": new Date(dataRequest.date).toDateString(),
+        ":status": Status[dataRequest.status],
         ":timestamp": new Date().getTime()
       },
       ReturnValues: "UPDATED_NEW"
@@ -2202,10 +2202,37 @@ var update = async (event) => {
   });
 };
 var softDelete = async (event) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
+  let response;
+  const databaseService = new DatabaseService();
+  const dataRequest = event.body;
+  const { ORDER_TABLE } = process.env;
+  return Promise.all([
+    validateAgainstConstraints(event.body, idRequest_constraint_default),
+    databaseService.getItem({ key: dataRequest.id, tableName: ORDER_TABLE })
+  ]).then(() => {
+    const params = {
+      TableName: ORDER_TABLE,
+      Key: {
+        "id": dataRequest.id
+      },
+      UpdateExpression: "set #status = :status, updatedAt = :timestamp",
+      ExpressionAttributeNames: {
+        "#status": "status"
+      },
+      ExpressionAttributeValues: {
+        ":status": "canceled" /* CANCELED */,
+        ":timestamp": new Date().getTime()
+      },
+      ReturnValues: "UPDATED_NEW"
+    };
+    return databaseService.update(params);
+  }).then((results) => {
+    response = new ResponseModel(__spreadValues({}, results.Attributes), 200, "Order successfully deleted");
+  }).catch((error) => {
+    response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Order cannot be deleted");
+  }).then(() => {
+    return response.generate();
+  });
   return formatJSONResponse({
     message: `read serverless`,
     event

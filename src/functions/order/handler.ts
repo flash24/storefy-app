@@ -8,6 +8,7 @@ import { validateAgainstConstraints } from "@libs/util";
 import createConstraints from './constraints/create.constraint.json';
 import updateConstraints from './constraints/update.constraint.json';
 import idRequestConstraints from './constraints/idRequest.constraint.json';
+import { Status } from "../../enums/order.enum";
 
 // Services
 import DatabaseService from "../../services/database.service";
@@ -103,8 +104,8 @@ const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (e
             },
             ExpressionAttributeValues: {
                 ":items": dataRequest.items,
-                ":date": dataRequest.date,
-                ":status": dataRequest.status,
+                ":date": new Date(dataRequest.date).toDateString() ,
+                ":status": Status[dataRequest.status],
                 ":timestamp": new Date().getTime(),
             },
             ReturnValues: "UPDATED_NEW"
@@ -126,31 +127,50 @@ const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (e
     });
 
 }
-const softDelete: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
-  try {
-    // const databaseService = new DatabaseService();
-    // const listModel = new ListModel({name:event.body.name});
-    // // Get model data
-    // const data = listModel.getEntityMappings();
-          
-    // // Initialise DynamoDB PUT parameters
-    // const params = {
-    //     TableName: process.env.LIST_TABLE,
-    //     Item: {
-    //         id: data.id,
-    //         name: data.name,
-    //         createdAt: data.timestamp,
-    //         updatedAt: data.timestamp,
-    //     }
-    // }
-    // console.log(params)
-    // Inserts item into DynamoDB table
-    // await databaseService.create(params);
-    // id = data.id 
-  } catch (error) {
-    console.log(error)
-  }
+const softDelete: ValidatedEventAPIGatewayProxyEvent<typeof readSchema> = async (event) => {
+  let response: any;
+  // Initialise database service
+  const databaseService = new DatabaseService();
+  const dataRequest: {id: string, items: [], date: string, status : string} = event.body
+  // Destructure environmental variable
+  const { ORDER_TABLE } = process.env;
+  return Promise.all([
+    validateAgainstConstraints(event.body, idRequestConstraints),
+    databaseService.getItem({key: dataRequest.id, tableName: ORDER_TABLE})
+])
+    .then(() => {
 
+        // Initialise DynamoDB UPDATE parameters
+        const params = {
+            TableName: ORDER_TABLE,
+            Key: {
+                "id": dataRequest.id
+            },
+            UpdateExpression: "set #status = :status, updatedAt = :timestamp",
+            ExpressionAttributeNames: {
+                "#status": "status"
+            },
+            ExpressionAttributeValues: {
+                ":status": Status.CANCELED,
+                ":timestamp": new Date().getTime(),
+            },
+            ReturnValues: "UPDATED_NEW"
+        }
+        // Updates Item in DynamoDB table
+        return databaseService.update(params);
+    })
+    .then((results) => {
+        // Set Success Response
+        response = new ResponseModel({ ...results.Attributes }, 200, 'Order successfully deleted');
+    })
+    .catch((error) => {
+        // Set Error Response
+        response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'Order cannot be deleted');
+    })
+    .then(() => {
+        // Return API Response
+        return response.generate()
+    });
   // return data.id;
   return formatJSONResponse({
     message: `read serverless`,

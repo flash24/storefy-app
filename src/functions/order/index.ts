@@ -54,7 +54,7 @@ const functions = {
     events: [
       {
         http: {
-          method: 'patch',
+          method: 'patch', //patch and not delete because is soft
           path: 'order',
           request: {
             schemas: {
