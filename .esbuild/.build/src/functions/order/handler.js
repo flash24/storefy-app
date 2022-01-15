@@ -1853,12 +1853,12 @@ var Status = /* @__PURE__ */ ((Status2) => {
 // src/models/order.model.ts
 var OrderModel = class {
   constructor({
-    id: id2 = v4(),
+    id: id3 = v4(),
     items: items2 = [],
     date: date2 = new Date(),
     status: status2 = null
   }) {
-    this._id = id2;
+    this._id = id3;
     this._items = items2;
     this._date = date2;
     this._status = status2;
@@ -1986,6 +1986,17 @@ var create_constraint_default = {
   status
 };
 
+// src/functions/order/constraints/idRequest.constraint.json
+var id2 = {
+  presence: {
+    allowEmpty: false
+  },
+  type: "string"
+};
+var idRequest_constraint_default = {
+  id: id2
+};
+
 // src/services/database.service.ts
 var AWS = __toESM(require("aws-sdk"));
 var {
@@ -2096,8 +2107,8 @@ var create = async (event) => {
     };
     await databaseService.create(params);
     return data.id;
-  }).then((id2) => {
-    response = new ResponseModel({ id: id2 }, 200, "Order successfully created");
+  }).then((id3) => {
+    response = new ResponseModel({ id: id3 }, 200, "Order successfully created");
   }).catch((error) => {
     response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Product cannot be created");
   }).then(() => {
@@ -2109,13 +2120,18 @@ var create = async (event) => {
   });
 };
 var read = async (event) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-  return formatJSONResponse({
-    message: `read serverless`,
-    event
+  let response;
+  const databaseService = new DatabaseService();
+  const id3 = event.queryStringParameters.id;
+  const { ORDER_TABLE } = process.env;
+  return validateAgainstConstraints({ id: id3 }, idRequest_constraint_default).then(() => {
+    return databaseService.getItem({ key: id3, tableName: ORDER_TABLE });
+  }).then(async (data) => {
+    response = new ResponseModel(__spreadValues({}, data.Item), 200, "Order successfully retrieved");
+  }).catch((error) => {
+    response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Product not found");
+  }).then(() => {
+    return response.generate();
   });
 };
 var update = async (event) => {

@@ -51,35 +51,30 @@ const create: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (e
     event,
   });
 }
-const read: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
-  try {
-    // const databaseService = new DatabaseService();
-    // const listModel = new ListModel({name:event.body.name});
-    // // Get model data
-    // const data = listModel.getEntityMappings();
-          
-    // // Initialise DynamoDB PUT parameters
-    // const params = {
-    //     TableName: process.env.LIST_TABLE,
-    //     Item: {
-    //         id: data.id,
-    //         name: data.name,
-    //         createdAt: data.timestamp,
-    //         updatedAt: data.timestamp,
-    //     }
-    // }
-    // console.log(params)
-    // Inserts item into DynamoDB table
-    // await databaseService.create(params);
-    // id = data.id 
-  } catch (error) {
-    console.log(error)
-  }
+const read: ValidatedEventAPIGatewayProxyEvent<typeof readSchema> = async (event) => {
+  let response: any;
+  // Initialise database service
+  const databaseService = new DatabaseService();
+  const id: string = event.queryStringParameters.id
+  const { ORDER_TABLE } = process.env;
+  return validateAgainstConstraints({id}, idRequestConstraints).then(() => {
+      // Get item from the DynamoDB table
+      return databaseService.getItem({ key: id, tableName: ORDER_TABLE });
+  })
+  .then( async (data) => {
+      // Set Success Response with data
+      response = new ResponseModel({
+          ...data.Item,
+      }, 200, 'Order successfully retrieved');
 
-  // return data.id;
-  return formatJSONResponse({
-    message: `read serverless`,
-    event,
+  })
+  .catch((error) => {
+      // Set Error Response
+      response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'Product not found');
+  })
+  .then(() => {
+      // Return API Response
+      return response.generate()
   });
 }
 const update: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
