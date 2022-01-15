@@ -20,8 +20,13 @@ coming soon ..
 
 The project code base is mainly located within the `src` folder. This folder is divided in:
 
-- `functions` - containing code base and configuration for your lambda functions
-- `libs` - containing shared code base between your lambdas
+- `configs` - containing the initian configuration for database
+- `enums` - containing the enums base for the proyect
+- `functions` - containing code base and configuration for the lambda functions
+- `interfaces` - containing code base for interface config 
+- `libs` - containing shared code base between the lambdas
+- `models` - containing business model for the proyect
+- `services` - containing core conection to the databse
 
 ```
 .

@@ -1,0 +1,272 @@
+{
+	"info": {
+		"_postman_id": "9752c797-5556-41c0-b354-01bd5c626647",
+		"name": "server-less",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "product-create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"name\": \"my super product\",\r\n   \"sku\": \"sdf-sd-f-sd-fsdf\",\r\n   \"description\": \"product description\",\r\n   \"price\": 20,\r\n   \"stock\": 200\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/dev/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dev",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "order-create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"items\" : [\r\n        {   \r\n            \"id\": \"f95a1c25-8f57-43c3-98e3-19109091d7ad\",\r\n            \"name\": \"my super product\",\r\n            \"sku\": \"sdf-sd-f-sd-fsdf\",\r\n            \"description\": \"product description\",\r\n            \"price\": 20,\r\n            \"stock\": 200\r\n        }\r\n    ],\r\n    \"date\": \"2022/01/01\",\r\n    \"status\":\"PENDING\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/dev/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dev",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "product-update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"f95a1c25-8f57-43c3-98e3-19109091d7ad\",\r\n   \"name\": \"nuevo super product\",\r\n   \"sku\": \"asdas4d5as7d87sda\",\r\n   \"description\": \"new product description\",\r\n   \"price\": 50,\r\n   \"stock\": 1510\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/dev/product",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dev",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "order-update",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"569d3744-587d-495d-ad25-333cfa5ba161\",\r\n    \"items\" : [\r\n        {   \r\n            \"id\": \"f95a1c25-8f57-43c3-98e3-19109091d7ad\",\r\n            \"name\": \"my super product\",\r\n            \"sku\": \"sdf-sd-f-sd-fsdf\",\r\n            \"description\": \"product description\",\r\n            \"price\": 20,\r\n            \"stock\": 200\r\n        },\r\n        {   \r\n            \"id\": \"569d3744-587d-495d-ad25-333cfa5ba161\",\r\n            \"name\": \"other super product\",\r\n            \"sku\": \"sdf-sd-f-sd-fsdf\",\r\n            \"description\": \"product description\",\r\n            \"price\": 20,\r\n            \"stock\": 200\r\n        }\r\n    ],\r\n    \"date\": \"2022/01/01\",\r\n    \"status\":\"PROCESSED\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/dev/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dev",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "order-deleSoft",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"a61b2024-2d39-4ca6-a88e-045f47a520ee\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/dev/order",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dev",
+						"order"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "product-read",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"id\": \"60b5f70f-86ed-4dfe-9448-c32c46fd2366\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/dev/product?id=569d3744-587d-495d-ad25-333cfa5ba161",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dev",
+						"product"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "569d3744-587d-495d-ad25-333cfa5ba161"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "order-read",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"id\": \"60b5f70f-86ed-4dfe-9448-c32c46fd2366\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/dev/order?id=a61b2024-2d39-4ca6-a88e-045f47a520ee",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"dev",
+						"order"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "a61b2024-2d39-4ca6-a88e-045f47a520ee"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
