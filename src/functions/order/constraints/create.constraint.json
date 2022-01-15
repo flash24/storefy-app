@@ -1,29 +1,17 @@
 {
-    "sku": {
+    "items": {
+      "presence": {
+        "allowEmpty": false
+      },
+      "type": "array"
+    },
+    "date": {
       "presence": {
         "allowEmpty": false
       },
       "type": "string"
     },
-    "description": {
-      "presence": {
-        "allowEmpty": false
-      },
-      "type": "string"
-    },
-    "price": {
-      "presence": {
-        "allowEmpty": false
-      },
-      "type": "number"
-    },
-    "stock": {
-      "presence": {
-        "allowEmpty": false
-      },
-      "type": "number"
-    },
-    "name": {
+    "status": {
       "presence": {
         "allowEmpty": false
       },

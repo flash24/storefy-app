@@ -1,11 +1,11 @@
 import { v4 as UUID } from "uuid";
-
+import { Status } from "../enums/order.enum";
 // Interfaces
 interface IProps {
   id?: string;
   items: [];
   date: Date;
-  status: string;
+  status: Status;
 }
 
 interface IOrderInterface extends IProps {
@@ -16,13 +16,13 @@ export default class OrderModel {
   private _id: string;
   private _items: [];
   private _date: Date;
-  private _status: any;
+  private _status: Status;
 
   constructor({
     id = UUID(),
     items = [],
     date = new Date(),
-    status = "",
+    status = null,
   }: IProps) {
     this._id = id;
     this._items = items;
@@ -66,8 +66,8 @@ export default class OrderModel {
    * Set Date
    * @param value
    */
-  setDate(value: Date): void {
-    this._date = value !== null ? value : new Date();
+  setDate(value: string): void {
+    this._date = value !== "" ? new Date(value) : null;
   }
 
   /**
@@ -79,51 +79,19 @@ export default class OrderModel {
   }
 
   /**
-   * Set Description
+   * Set status
    * @param value
    */
-  setDescription(value: string): void {
-    this._description = value !== "" ? value : null;
+  setStatus(value: string): void {
+    this._status = value !== "" ? Status[value] : null;
   }
 
   /**
-   * Get description
-   * @return {string|*}
+   * Get status
+   * @return {Status|*}
    */
-  getDescription(): string {
-    return this._description;
-  }
-
-  /**
-   * Set Price
-   * @param value
-   */
-  setPrice(value: number): void {
-    this._price = value > 0 ? value : null;
-  }
-
-  /**
-   * Get description
-   * @return {number|*}
-   */
-  getPrice(): number {
-    return this._price;
-  }
-
-  /**
-   * Set stock
-   * @param value
-   */
-  setStock(value: number): void {
-    this._stock = value > 0 ? value : null;
-  }
-
-  /**
-   * Get stock
-   * @return {number|*}
-   */
-  getStock(): number {
-    return this._stock;
+  getStatus(): Status {
+    return this._status;
   }
 
   /**
@@ -133,11 +101,9 @@ export default class OrderModel {
   getEntityMappings(): IOrderInterface {
     return {
       id: this.getId(),
-      name: this.getName(),
-      sku: this.getSku(),
-      description: this.getDescription(),
-      price: this.getPrice(),
-      stock: this.getStock(),
+      items: this.getItems(),
+      date: this.getDate(),
+      status: this.getStatus(),
       timestamp: new Date().getTime(),
     };
   }

@@ -1,13 +1,11 @@
 const createSchema = {
   type: "object",
   properties: {
-    name: { type: "string" },
-    sku: { type: "string" },
-    description: { type: "string" },
-    price: { type: "number" },
-    stock: { type: "number" },
+    items: { type: "array" },
+    date: { type: "date" },
+    status: { type: "string" },
   },
-  required: ["name", "sku", "description", "price", "stock"],
+  required: ["items", "date", "status"],
 };
 const updateSchema = {
   type: "object",

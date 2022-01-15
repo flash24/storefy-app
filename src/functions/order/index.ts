@@ -1,4 +1,4 @@
-import {createSchema} from './schema';
+import { createSchema, updateSchema, readSchema } from "./schema";
 import { handlerPath } from '@libs/handlerResolver';
 const functions = {
   createOrder : {
@@ -26,23 +26,7 @@ const functions = {
           path: 'order',
           request: {
             schemas: {
-              'application/json': {}
-            }
-          }
-        }
-      }
-    ]
-  },
-  readOrders: {
-    handler: `${handlerPath(__dirname)}/handler.readSL`,
-    events: [
-      {
-        http: {
-          method: 'get',
-          path: 'order/list',
-          request: {
-            schemas: {
-              'application/json': {}
+              'application/json': readSchema
             }
           }
         }
@@ -58,7 +42,7 @@ const functions = {
           path: 'order',
           request: {
             schemas: {
-              'application/json': {}
+              'application/json': updateSchema
             }
           }
         }
