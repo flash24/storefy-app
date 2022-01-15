@@ -1845,14 +1845,14 @@ var parse = import_dist.default.parse;
 // src/models/product.model.ts
 var ProductModel = class {
   constructor({
-    id: id2 = v4(),
+    id: id3 = v4(),
     name: name3 = "",
     sku: sku3 = "",
     description: description3 = "",
     price: price3 = 0,
     stock: stock3 = 0
   }) {
-    this._id = id2;
+    this._id = id3;
     this._name = name3;
     this._sku = sku3;
     this._description = description3;
@@ -2056,6 +2056,17 @@ var update_constraint_default = {
   name: name2
 };
 
+// src/functions/product/constraints/idRequest.constraint.json
+var id2 = {
+  presence: {
+    allowEmpty: false
+  },
+  type: "string"
+};
+var idRequest_constraint_default = {
+  id: id2
+};
+
 // src/services/database.service.ts
 var AWS = __toESM(require("aws-sdk"));
 var {
@@ -2167,8 +2178,8 @@ var create = async (event) => {
     };
     await databaseService.create(params);
     return data.id;
-  }).then((id2) => {
-    response = new ResponseModel({ id: id2 }, 200, "Product successfully created");
+  }).then((id3) => {
+    response = new ResponseModel({ id: id3 }, 200, "Product successfully created");
   }).catch((error) => {
     response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Product cannot be created");
   }).then(() => {
@@ -2217,10 +2228,19 @@ var update = async (event) => {
   });
 };
 var read = async (event) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
+  let response;
+  const databaseService = new DatabaseService();
+  const dataRequest = event.body;
+  const { PRODUCT_TABLE } = process.env;
+  return validateAgainstConstraints(event.body, idRequest_constraint_default).then(() => {
+    return databaseService.getItem({ key: dataRequest.id, tableName: PRODUCT_TABLE });
+  }).then(async (data) => {
+    response = new ResponseModel(__spreadValues({}, data.Item), 200, "Product successfully retrieved");
+  }).catch((error) => {
+    response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Product not found");
+  }).then(() => {
+    return response.generate();
+  });
   return formatJSONResponse({
     message: `read serverless`,
     event

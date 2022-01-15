@@ -19,6 +19,13 @@ const updateSchema = {
     price: { type: "number" },
     stock: { type: "number" },
   },
-  required: ["name", "sku", "description", "price", "stock"],
+  required: ["id", "name", "sku", "description", "price", "stock"],
 };
-export { createSchema, updateSchema };
+const readSchema = {
+  type: "object",
+  properties: {
+    id: { type: "string" },
+  },
+  required: ["id"],
+};
+export { createSchema, updateSchema, readSchema };

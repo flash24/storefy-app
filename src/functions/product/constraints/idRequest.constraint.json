@@ -1,0 +1,8 @@
+{
+    "id": {
+      "presence": {
+        "allowEmpty": false
+      },
+      "type": "string"
+    }
+  }

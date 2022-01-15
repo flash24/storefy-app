@@ -1,12 +1,13 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/apiGateway';
 import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
-import {createSchema, updateSchema} from './schema';
+import {createSchema, updateSchema, readSchema} from './schema';
 import ProductModel from "@models/product.model";
 import ResponseModel from "@models/response.model";
 import { validateAgainstConstraints } from "@libs/util";
 import createConstraints from './constraints/create.constraint.json';
 import updateConstraints from './constraints/update.constraint.json';
+import idRequestConstraints from './constraints/idRequest.constraint.json';
 // Services
 import DatabaseService from "../../services/database.service";
 
@@ -99,38 +100,37 @@ const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (e
     });
 
 }
-const read: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
-  try {
-    // const databaseService = new DatabaseService();
-    // const listModel = new ListModel({name:event.body.name});
-    // // Get model data
-    // const data = listModel.getEntityMappings();
-          
-    // // Initialise DynamoDB PUT parameters
-    // const params = {
-    //     TableName: process.env.PRODUCT_TABLE,
-    //     Item: {
-    //         id: data.id,
-    //         name: data.name,
-    //         createdAt: data.timestamp,
-    //         updatedAt: data.timestamp,
-    //     }
-    // }
-    // console.log(params)
-    // Inserts item into DynamoDB table
-    // await databaseService.create(params);
-    // id = data.id 
-  } catch (error) {
-    console.log(error)
-  }
+const read: ValidatedEventAPIGatewayProxyEvent<typeof readSchema> = async (event) => {
+  let response: any;
+  // Initialise database service
+  const databaseService = new DatabaseService();
+  const dataRequest: {id: string} = event.body
+  const { PRODUCT_TABLE } = process.env;
+  return validateAgainstConstraints(event.body, idRequestConstraints).then(() => {
+      // Get item from the DynamoDB table
+      return databaseService.getItem({ key: dataRequest.id, tableName: PRODUCT_TABLE });
+  })
+  .then( async (data) => {
+      // Set Success Response with data
+      response = new ResponseModel({
+          ...data.Item,
+      }, 200, 'Product successfully retrieved');
 
-  // return data.id;
+  })
+  .catch((error) => {
+      // Set Error Response
+      response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'Product not found');
+  })
+  .then(() => {
+      // Return API Response
+      return response.generate()
+  });
   return formatJSONResponse({
     message: `read serverless`,
     event,
   });
 }
-const deleteP: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
+const deleteP: ValidatedEventAPIGatewayProxyEvent<typeof readSchema> = async (event) => {
   try {
     // const databaseService = new DatabaseService();
     // const listModel = new ListModel({name:event.body.name});
