@@ -32,9 +32,9 @@ const create: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (e
             await databaseService.create(params);
             return data.id;
         })
-        .then((listId) => {
+        .then((id) => {
             // Set Success Response
-            response = new ResponseModel({ listId }, 200, 'Product successfully created');
+            response = new ResponseModel({ id }, 200, 'Product successfully created');
         })
         .catch((error) => {
             // Set Error Response
@@ -64,12 +64,20 @@ const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (e
             Key: {
                 "id": dataRequest.id
             },
-            UpdateExpression: "set #name = :name, updatedAt = :timestamp",
+            UpdateExpression: "set #name = :name,#sku = :sku,#description = :description,#price = :price,#stock = :stock, updatedAt = :timestamp",
             ExpressionAttributeNames: {
-                "#name": "name"
+                "#name": "name",
+                "#sku": "sku",
+                "#description": "description",
+                "#price": "price",
+                "#stock": "stock",
             },
             ExpressionAttributeValues: {
                 ":name": dataRequest.name,
+                ":sku": dataRequest.sku,
+                ":description": dataRequest.description,
+                ":price": dataRequest.price,
+                ":stock": dataRequest.stock,
                 ":timestamp": new Date().getTime(),
             },
             ReturnValues: "UPDATED_NEW"
@@ -90,13 +98,6 @@ const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (e
         return response.generate()
     });
 
-  // Destructure request data
-  // const { listId, name } = requestData
-
-  return formatJSONResponse({
-    message: `read serverless`,
-    event,
-  });
 }
 const read: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
   try {

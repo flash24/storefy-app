@@ -2167,8 +2167,8 @@ var create = async (event) => {
     };
     await databaseService.create(params);
     return data.id;
-  }).then((listId) => {
-    response = new ResponseModel({ listId }, 200, "Product successfully created");
+  }).then((id2) => {
+    response = new ResponseModel({ id: id2 }, 200, "Product successfully created");
   }).catch((error) => {
     response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Product cannot be created");
   }).then(() => {
@@ -2189,12 +2189,20 @@ var update = async (event) => {
       Key: {
         "id": dataRequest.id
       },
-      UpdateExpression: "set #name = :name, updatedAt = :timestamp",
+      UpdateExpression: "set #name = :name,#sku = :sku,#description = :description,#price = :price,#stock = :stock, updatedAt = :timestamp",
       ExpressionAttributeNames: {
-        "#name": "name"
+        "#name": "name",
+        "#sku": "sku",
+        "#description": "description",
+        "#price": "price",
+        "#stock": "stock"
       },
       ExpressionAttributeValues: {
         ":name": dataRequest.name,
+        ":sku": dataRequest.sku,
+        ":description": dataRequest.description,
+        ":price": dataRequest.price,
+        ":stock": dataRequest.stock,
         ":timestamp": new Date().getTime()
       },
       ReturnValues: "UPDATED_NEW"
@@ -2206,10 +2214,6 @@ var update = async (event) => {
     response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Product cannot be updated");
   }).then(() => {
     return response.generate();
-  });
-  return formatJSONResponse({
-    message: `read serverless`,
-    event
   });
 };
 var read = async (event) => {
