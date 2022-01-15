@@ -104,11 +104,11 @@ const read: ValidatedEventAPIGatewayProxyEvent<typeof readSchema> = async (event
   let response: any;
   // Initialise database service
   const databaseService = new DatabaseService();
-  const dataRequest: {id: string} = event.body
+  const id: string = event.queryStringParameters.id
   const { PRODUCT_TABLE } = process.env;
-  return validateAgainstConstraints(event.body, idRequestConstraints).then(() => {
+  return validateAgainstConstraints({id}, idRequestConstraints).then(() => {
       // Get item from the DynamoDB table
-      return databaseService.getItem({ key: dataRequest.id, tableName: PRODUCT_TABLE });
+      return databaseService.getItem({ key: id, tableName: PRODUCT_TABLE });
   })
   .then( async (data) => {
       // Set Success Response with data

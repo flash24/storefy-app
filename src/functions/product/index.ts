@@ -23,7 +23,7 @@ const functions = {
       {
         http: {
           method: "get",
-          path: "product",
+          path: "product/{ID}",
           request: {
             schemas: {
               "application/json": readSchema,

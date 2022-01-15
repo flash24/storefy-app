@@ -2230,10 +2230,10 @@ var update = async (event) => {
 var read = async (event) => {
   let response;
   const databaseService = new DatabaseService();
-  const dataRequest = event.body;
+  const id3 = event.queryStringParameters.id;
   const { PRODUCT_TABLE } = process.env;
-  return validateAgainstConstraints(event.body, idRequest_constraint_default).then(() => {
-    return databaseService.getItem({ key: dataRequest.id, tableName: PRODUCT_TABLE });
+  return validateAgainstConstraints({ id: id3 }, idRequest_constraint_default).then(() => {
+    return databaseService.getItem({ key: id3, tableName: PRODUCT_TABLE });
   }).then(async (data) => {
     response = new ResponseModel(__spreadValues({}, data.Item), 200, "Product successfully retrieved");
   }).catch((error) => {
