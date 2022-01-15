@@ -125,10 +125,6 @@ const read: ValidatedEventAPIGatewayProxyEvent<typeof readSchema> = async (event
       // Return API Response
       return response.generate()
   });
-  return formatJSONResponse({
-    message: `read serverless`,
-    event,
-  });
 }
 const deleteP: ValidatedEventAPIGatewayProxyEvent<typeof readSchema> = async (event) => {
   try {

@@ -3,39 +3,31 @@ import { v4 as UUID } from "uuid";
 // Interfaces
 interface IProps {
   id?: string;
-  name: string;
-  sku: string;
-  description: string;
-  price: number;
-  stock: number;
+  items: [];
+  date: Date;
+  status: string;
 }
 
-interface IProductInterface extends IProps {
+interface IOrderInterface extends IProps {
   timestamp: number;
 }
 
-export default class ProductModel {
+export default class OrderModel {
   private _id: string;
-  private _name: string;
-  private _sku: string;
-  private _description: string;
-  private _price: number;
-  private _stock: number;
+  private _items: [];
+  private _date: Date;
+  private _status: any;
 
   constructor({
     id = UUID(),
-    name = "",
-    sku = "",
-    description = "",
-    price = 0,
-    stock = 0,
+    items = [],
+    date = new Date(),
+    status = "",
   }: IProps) {
     this._id = id;
-    this._name = name;
-    this._sku = sku;
-    this._description = description;
-    this._price = price;
-    this._stock = stock;
+    this._items = items;
+    this._date = date;
+    this._status = status;
   }
 
   /**
@@ -55,35 +47,35 @@ export default class ProductModel {
   }
 
   /**
-   * Set Name
+   * Set Items
    * @param value
    */
-  setName(value: string): void {
-    this._name = value !== "" ? value : null;
+  setItems(value: []): void {
+    this._items = value.length > 0 ? value : [];
   }
 
   /**
-   * Get Name
-   * @return {string|*}
+   * Get Items
+   * @return {sarray|*}
    */
-  getName(): string {
-    return this._name;
+  getItems(): [] {
+    return this._items;
   }
 
   /**
-   * Set Sku
+   * Set Date
    * @param value
    */
-  setSku(value: string): void {
-    this._sku = value !== "" ? value : null;
+  setDate(value: Date): void {
+    this._date = value !== null ? value : new Date();
   }
 
   /**
-   * Get sku
-   * @return {string|*}
+   * Get Date
+   * @return {Date|*}
    */
-  getSku(): string {
-    return this._sku;
+  getDate(): Date {
+    return this._date;
   }
 
   /**
@@ -138,7 +130,7 @@ export default class ProductModel {
    * Get Base entity mappings
    * @return {IProductterface}
    */
-  getEntityMappings(): IProductInterface {
+  getEntityMappings(): IOrderInterface {
     return {
       id: this.getId(),
       name: this.getName(),

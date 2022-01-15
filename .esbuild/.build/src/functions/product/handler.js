@@ -2241,10 +2241,6 @@ var read = async (event) => {
   }).then(() => {
     return response.generate();
   });
-  return formatJSONResponse({
-    message: `read serverless`,
-    event
-  });
 };
 var deleteP = async (event) => {
   try {

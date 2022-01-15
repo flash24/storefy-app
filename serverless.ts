@@ -19,8 +19,7 @@ const serverlessConfiguration: AWS = {
       REGION: '${self:custom.region}',
       STAGE: '${self:custom.stage}',
       PRODUCT_TABLE: '${self:custom.product_table}',
-      LIST_TABLE: '${self:custom.list_table}',
-      TASKS_TABLE: '${self:custom.tasks_table}',
+      ORDER_TABLE: '${self:custom.order_table}',
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
@@ -38,8 +37,8 @@ const serverlessConfiguration: AWS = {
             'dynamodb:DeleteItem'
         ],
         Resource: [
-          {"Fn::GetAtt": [ 'ListTable', 'Arn' ]},
-          {"Fn::GetAtt": [ 'TasksTable', 'Arn' ]}
+          {"Fn::GetAtt": [ 'ProductTable', 'Arn' ]},
+          {"Fn::GetAtt": [ 'OrderTable', 'Arn' ]},
         ]
       }
     ]
@@ -52,8 +51,7 @@ const serverlessConfiguration: AWS = {
     region: '${opt:region, self:provider.region}',
     stage: '${opt:stage, self:provider.stage}',
     product_table: '${self:service}-product-table-${opt:stage, self:provider.stage}',
-    list_table: '${self:service}-list-table-${opt:stage, self:provider.stage}',
-    tasks_table: '${self:service}-tasks-table-${opt:stage, self:provider.stage}',
+    order_table: '${self:service}-order-table-${opt:stage, self:provider.stage}',
     table_throughputs: {
       prod: 5,
       default: 1,
