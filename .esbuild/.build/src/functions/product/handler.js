@@ -26,8 +26,8 @@ var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __export = (target, all) => {
-  for (var name2 in all)
-    __defProp(target, name2, { get: all[name2], enumerable: true });
+  for (var name3 in all)
+    __defProp(target, name3, { get: all[name3], enumerable: true });
 };
 var __reExport = (target, module2, copyDefault, desc) => {
   if (module2 && typeof module2 === "object" || typeof module2 === "function") {
@@ -394,8 +394,8 @@ var require_util = __commonJS({
     } = require("util");
     var createErrorRegexp = /[^a-zA-Z]/g;
     var createError = (code, message, properties = {}) => {
-      const name2 = statuses[code].replace(createErrorRegexp, "");
-      const className = name2.substr(-5) !== "Error" ? name2 + "Error" : name2;
+      const name3 = statuses[code].replace(createErrorRegexp, "");
+      const className = name3.substr(-5) !== "Error" ? name3 + "Error" : name3;
       function HttpError(message2) {
         const msg = message2 !== null && message2 !== void 0 ? message2 : statuses[code];
         const err = new Error(msg);
@@ -703,7 +703,7 @@ var require_v35 = __commonJS({
     exports.DNS = DNS;
     var URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
     exports.URL = URL;
-    function _default(name2, version2, hashfunc) {
+    function _default(name3, version2, hashfunc) {
       function generateUUID(value, namespace, buf, offset) {
         if (typeof value === "string") {
           value = stringToBytes(value);
@@ -730,7 +730,7 @@ var require_v35 = __commonJS({
         return (0, _stringify.default)(bytes);
       }
       try {
-        generateUUID.name = name2;
+        generateUUID.name = name3;
       } catch (err) {
       }
       generateUUID.DNS = DNS;
@@ -1299,24 +1299,24 @@ var require_validate2 = __commonJS({
             if (v.isDefined(input.getAttribute("data-ignored"))) {
               continue;
             }
-            var name2 = input.name.replace(/\./g, "\\\\.");
+            var name3 = input.name.replace(/\./g, "\\\\.");
             value = v.sanitizeFormValue(input.value, options);
             if (input.type === "number") {
               value = value ? +value : null;
             } else if (input.type === "checkbox") {
               if (input.attributes.value) {
                 if (!input.checked) {
-                  value = values[name2] || null;
+                  value = values[name3] || null;
                 }
               } else {
                 value = input.checked;
               }
             } else if (input.type === "radio") {
               if (!input.checked) {
-                value = values[name2] || null;
+                value = values[name3] || null;
               }
             }
-            values[name2] = value;
+            values[name3] = value;
           }
           inputs = form.querySelectorAll("select[name]");
           for (i = 0; i < inputs.length; ++i) {
@@ -1519,7 +1519,7 @@ var require_validate2 = __commonJS({
             return;
           }
           options = v.extend({}, this.options, options);
-          var errors = [], name2, count, checks = {
+          var errors = [], name3, count, checks = {
             greaterThan: function(v2, c) {
               return v2 > c;
             },
@@ -1558,14 +1558,14 @@ var require_validate2 = __commonJS({
           if (options.onlyInteger && !v.isInteger(value)) {
             return options.message || options.notInteger || this.notInteger || this.message || "must be an integer";
           }
-          for (name2 in checks) {
-            count = options[name2];
-            if (v.isNumber(count) && !checks[name2](value, count)) {
-              var key = "not" + v.capitalize(name2);
+          for (name3 in checks) {
+            count = options[name3];
+            if (v.isNumber(count) && !checks[name3](value, count)) {
+              var key = "not" + v.capitalize(name3);
               var msg = options[key] || this[key] || this.message || "must be %{type} %{count}";
               errors.push(v.format(msg, {
                 count,
-                type: prettify(name2)
+                type: prettify(name3)
               }));
             }
           }
@@ -1845,19 +1845,19 @@ var parse = import_dist.default.parse;
 // src/models/product.model.ts
 var ProductModel = class {
   constructor({
-    id = v4(),
-    name: name2 = "",
-    sku: sku2 = "",
-    description: description2 = "",
-    price: price2 = 0,
-    stock: stock2 = 0
+    id: id2 = v4(),
+    name: name3 = "",
+    sku: sku3 = "",
+    description: description3 = "",
+    price: price3 = 0,
+    stock: stock3 = 0
   }) {
-    this._id = id;
-    this._name = name2;
-    this._sku = sku2;
-    this._description = description2;
-    this._price = price2;
-    this._stock = stock2;
+    this._id = id2;
+    this._name = name3;
+    this._sku = sku3;
+    this._description = description3;
+    this._price = price3;
+    this._stock = stock3;
   }
   setId(value) {
     this._id = value !== "" ? value : null;
@@ -2010,6 +2010,52 @@ var create_constraint_default = {
   name
 };
 
+// src/functions/product/constraints/update.constraint.json
+var id = {
+  presence: {
+    allowEmpty: false
+  },
+  type: "string"
+};
+var sku2 = {
+  presence: {
+    allowEmpty: false
+  },
+  type: "string"
+};
+var description2 = {
+  presence: {
+    allowEmpty: false
+  },
+  type: "string"
+};
+var price2 = {
+  presence: {
+    allowEmpty: false
+  },
+  type: "number"
+};
+var stock2 = {
+  presence: {
+    allowEmpty: false
+  },
+  type: "number"
+};
+var name2 = {
+  presence: {
+    allowEmpty: false
+  },
+  type: "string"
+};
+var update_constraint_default = {
+  id,
+  sku: sku2,
+  description: description2,
+  price: price2,
+  stock: stock2,
+  name: name2
+};
+
 // src/services/database.service.ts
 var AWS = __toESM(require("aws-sdk"));
 var {
@@ -2132,7 +2178,35 @@ var create = async (event) => {
 var update = async (event) => {
   let response;
   const databaseService = new DatabaseService();
+  const dataRequest = event.body;
   const { PRODUCT_TABLE } = process.env;
+  return Promise.all([
+    validateAgainstConstraints(event.body, update_constraint_default),
+    databaseService.getItem({ key: dataRequest.id, tableName: PRODUCT_TABLE })
+  ]).then(() => {
+    const params = {
+      TableName: PRODUCT_TABLE,
+      Key: {
+        "id": dataRequest.id
+      },
+      UpdateExpression: "set #name = :name, updatedAt = :timestamp",
+      ExpressionAttributeNames: {
+        "#name": "name"
+      },
+      ExpressionAttributeValues: {
+        ":name": dataRequest.name,
+        ":timestamp": new Date().getTime()
+      },
+      ReturnValues: "UPDATED_NEW"
+    };
+    return databaseService.update(params);
+  }).then((results) => {
+    response = new ResponseModel(__spreadValues({}, results.Attributes), 200, "Product successfully updated");
+  }).catch((error) => {
+    response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Product cannot be updated");
+  }).then(() => {
+    return response.generate();
+  });
   return formatJSONResponse({
     message: `read serverless`,
     event

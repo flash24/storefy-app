@@ -49,46 +49,46 @@ const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (e
   let response: any;
   // Initialise database service
   const databaseService = new DatabaseService();
-
+  const dataRequest: {id: string, name: string, sku: string, description : string, price: number, stock: number} = event.body
   // Destructure environmental variable
   const { PRODUCT_TABLE } = process.env;
-//   return Promise.all([
-//     validateAgainstConstraints(event.body, updateConstraints),
-//     databaseService.getItem({key: listId, tableName: PRODUCT_TABLE})
-// ])
-//     .then(() => {
+  return Promise.all([
+    validateAgainstConstraints(event.body, updateConstraints),
+    databaseService.getItem({key: dataRequest.id, tableName: PRODUCT_TABLE})
+])
+    .then(() => {
 
-//         // Initialise DynamoDB UPDATE parameters
-//         const params = {
-//             TableName: PRODUCT_TABLE,
-//             Key: {
-//                 "id": listId
-//             },
-//             UpdateExpression: "set #name = :name, updatedAt = :timestamp",
-//             ExpressionAttributeNames: {
-//                 "#name": "name"
-//             },
-//             ExpressionAttributeValues: {
-//                 ":name": name,
-//                 ":timestamp": new Date().getTime(),
-//             },
-//             ReturnValues: "UPDATED_NEW"
-//         }
-//         // Updates Item in DynamoDB table
-//         return databaseService.update(params);
-//     })
-//     .then((results) => {
-//         // Set Success Response
-//         response = new ResponseModel({ ...results.Attributes }, 200, 'To-do list successfully updated');
-//     })
-//     .catch((error) => {
-//         // Set Error Response
-//         response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'To-do list cannot be updated');
-//     })
-//     .then(() => {
-//         // Return API Response
-//         return response.generate()
-//     });
+        // Initialise DynamoDB UPDATE parameters
+        const params = {
+            TableName: PRODUCT_TABLE,
+            Key: {
+                "id": dataRequest.id
+            },
+            UpdateExpression: "set #name = :name, updatedAt = :timestamp",
+            ExpressionAttributeNames: {
+                "#name": "name"
+            },
+            ExpressionAttributeValues: {
+                ":name": dataRequest.name,
+                ":timestamp": new Date().getTime(),
+            },
+            ReturnValues: "UPDATED_NEW"
+        }
+        // Updates Item in DynamoDB table
+        return databaseService.update(params);
+    })
+    .then((results) => {
+        // Set Success Response
+        response = new ResponseModel({ ...results.Attributes }, 200, 'Product successfully updated');
+    })
+    .catch((error) => {
+        // Set Error Response
+        response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'Product cannot be updated');
+    })
+    .then(() => {
+        // Return API Response
+        return response.generate()
+    });
 
   // Destructure request data
   // const { listId, name } = requestData

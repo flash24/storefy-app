@@ -1,4 +1,4 @@
-import {createSchema} from './schema';
+import {createSchema, updateSchema} from './schema';
 import { handlerPath } from '@libs/handlerResolver';
 const functions = {
   createProduct : {
@@ -58,7 +58,7 @@ const functions = {
           path: 'product',
           request: {
             schemas: {
-              'application/json': {}
+              'application/json': updateSchema
             }
           }
         }

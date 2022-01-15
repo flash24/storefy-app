@@ -11,6 +11,7 @@ import DatabaseService from "../../services/database.service";
 const create: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
   let id: String;
   try {
+    
     const databaseService = new DatabaseService();
     const listModel = new ListModel({name:""});
     // Get model data
