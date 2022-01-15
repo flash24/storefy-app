@@ -4,7 +4,7 @@ import { Status } from "../enums/order.enum";
 interface IProps {
   id?: string;
   items: [];
-  date: Date;
+  date: string;
   status: Status;
 }
 
@@ -21,12 +21,12 @@ export default class OrderModel {
   constructor({
     id = UUID(),
     items = [],
-    date = new Date(),
+    date = new Date().toDateString(),
     status = Status.PENDING,
   }: IProps) {
     this._id = id;
     this._items = items;
-    this._date = date;
+    this._date = new Date(date);
     this._status = Status[status];
   }
 
@@ -72,10 +72,10 @@ export default class OrderModel {
 
   /**
    * Get Date
-   * @return {Date|*}
+   * @return {string|*}
    */
-  getDate(): Date {
-    return this._date;
+  getDate(): string {
+    return this._date.toDateString();
   }
 
   /**

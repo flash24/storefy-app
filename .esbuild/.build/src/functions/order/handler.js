@@ -26,8 +26,8 @@ var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 var __export = (target, all) => {
-  for (var name2 in all)
-    __defProp(target, name2, { get: all[name2], enumerable: true });
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __reExport = (target, module2, copyDefault, desc) => {
   if (module2 && typeof module2 === "object" || typeof module2 === "function") {
@@ -394,8 +394,8 @@ var require_util = __commonJS({
     } = require("util");
     var createErrorRegexp = /[^a-zA-Z]/g;
     var createError = (code, message, properties = {}) => {
-      const name2 = statuses[code].replace(createErrorRegexp, "");
-      const className = name2.substr(-5) !== "Error" ? name2 + "Error" : name2;
+      const name = statuses[code].replace(createErrorRegexp, "");
+      const className = name.substr(-5) !== "Error" ? name + "Error" : name;
       function HttpError(message2) {
         const msg = message2 !== null && message2 !== void 0 ? message2 : statuses[code];
         const err = new Error(msg);
@@ -703,7 +703,7 @@ var require_v35 = __commonJS({
     exports.DNS = DNS;
     var URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
     exports.URL = URL;
-    function _default(name2, version2, hashfunc) {
+    function _default(name, version2, hashfunc) {
       function generateUUID(value, namespace, buf, offset) {
         if (typeof value === "string") {
           value = stringToBytes(value);
@@ -730,7 +730,7 @@ var require_v35 = __commonJS({
         return (0, _stringify.default)(bytes);
       }
       try {
-        generateUUID.name = name2;
+        generateUUID.name = name;
       } catch (err) {
       }
       generateUUID.DNS = DNS;
@@ -1299,24 +1299,24 @@ var require_validate2 = __commonJS({
             if (v.isDefined(input.getAttribute("data-ignored"))) {
               continue;
             }
-            var name2 = input.name.replace(/\./g, "\\\\.");
+            var name = input.name.replace(/\./g, "\\\\.");
             value = v.sanitizeFormValue(input.value, options);
             if (input.type === "number") {
               value = value ? +value : null;
             } else if (input.type === "checkbox") {
               if (input.attributes.value) {
                 if (!input.checked) {
-                  value = values[name2] || null;
+                  value = values[name] || null;
                 }
               } else {
                 value = input.checked;
               }
             } else if (input.type === "radio") {
               if (!input.checked) {
-                value = values[name2] || null;
+                value = values[name] || null;
               }
             }
-            values[name2] = value;
+            values[name] = value;
           }
           inputs = form.querySelectorAll("select[name]");
           for (i = 0; i < inputs.length; ++i) {
@@ -1519,7 +1519,7 @@ var require_validate2 = __commonJS({
             return;
           }
           options = v.extend({}, this.options, options);
-          var errors = [], name2, count, checks = {
+          var errors = [], name, count, checks = {
             greaterThan: function(v2, c) {
               return v2 > c;
             },
@@ -1558,14 +1558,14 @@ var require_validate2 = __commonJS({
           if (options.onlyInteger && !v.isInteger(value)) {
             return options.message || options.notInteger || this.notInteger || this.message || "must be an integer";
           }
-          for (name2 in checks) {
-            count = options[name2];
-            if (v.isNumber(count) && !checks[name2](value, count)) {
-              var key = "not" + v.capitalize(name2);
+          for (name in checks) {
+            count = options[name];
+            if (v.isNumber(count) && !checks[name](value, count)) {
+              var key = "not" + v.capitalize(name);
               var msg = options[key] || this[key] || this.message || "must be %{type} %{count}";
               errors.push(v.format(msg, {
                 count,
-                type: prettify(name2)
+                type: prettify(name)
               }));
             }
           }
@@ -1809,7 +1809,6 @@ var require_validate2 = __commonJS({
 var handler_exports = {};
 __export(handler_exports, {
   createSL: () => createSL,
-  readListSL: () => readListSL,
   readSL: () => readSL,
   softDeleteSL: () => softDeleteSL,
   updateSL: () => updateSL
@@ -1854,14 +1853,14 @@ var Status = /* @__PURE__ */ ((Status2) => {
 var OrderModel = class {
   constructor({
     id: id4 = v4(),
-    items: items2 = [],
-    date: date2 = new Date(),
-    status: status2 = "pending" /* PENDING */
+    items: items3 = [],
+    date: date3 = new Date().toDateString(),
+    status: status3 = "pending" /* PENDING */
   }) {
     this._id = id4;
-    this._items = items2;
-    this._date = date2;
-    this._status = Status[status2];
+    this._items = items3;
+    this._date = new Date(date3);
+    this._status = Status[status3];
   }
   setId(value) {
     this._id = value !== "" ? value : null;
@@ -1879,7 +1878,7 @@ var OrderModel = class {
     this._date = value !== "" ? new Date(value) : null;
   }
   getDate() {
-    return this._date;
+    return this._date.toDateString();
   }
   setStatus(value) {
     this._status = value !== "" ? Status[value] : null;
@@ -1993,31 +1992,19 @@ var id2 = {
   },
   type: "string"
 };
-var sku = {
+var items2 = {
+  presence: {
+    allowEmpty: false
+  },
+  type: "array"
+};
+var date2 = {
   presence: {
     allowEmpty: false
   },
   type: "string"
 };
-var description = {
-  presence: {
-    allowEmpty: false
-  },
-  type: "string"
-};
-var price = {
-  presence: {
-    allowEmpty: false
-  },
-  type: "number"
-};
-var stock = {
-  presence: {
-    allowEmpty: false
-  },
-  type: "number"
-};
-var name = {
+var status2 = {
   presence: {
     allowEmpty: false
   },
@@ -2025,11 +2012,9 @@ var name = {
 };
 var update_constraint_default = {
   id: id2,
-  sku,
-  description,
-  price,
-  stock,
-  name
+  items: items2,
+  date: date2,
+  status: status2
 };
 
 // src/functions/order/constraints/idRequest.constraint.json
@@ -2155,7 +2140,7 @@ var create = async (event) => {
   }).then((id4) => {
     response = new ResponseModel({ id: id4 }, 200, "Order successfully created");
   }).catch((error) => {
-    response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Product cannot be created");
+    response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Order cannot be created");
   }).then(() => {
     return response.generate();
   });
@@ -2183,39 +2168,35 @@ var update = async (event) => {
   let response;
   const databaseService = new DatabaseService();
   const dataRequest = event.body;
-  const { PRODUCT_TABLE } = process.env;
+  const { ORDER_TABLE } = process.env;
   return Promise.all([
     validateAgainstConstraints(event.body, update_constraint_default),
-    databaseService.getItem({ key: dataRequest.id, tableName: PRODUCT_TABLE })
+    databaseService.getItem({ key: dataRequest.id, tableName: ORDER_TABLE })
   ]).then(() => {
     const params = {
-      TableName: PRODUCT_TABLE,
+      TableName: ORDER_TABLE,
       Key: {
         "id": dataRequest.id
       },
-      UpdateExpression: "set #name = :name,#sku = :sku,#description = :description,#price = :price,#stock = :stock, updatedAt = :timestamp",
+      UpdateExpression: "set #items = :items,#date = :date,#status = :status, updatedAt = :timestamp",
       ExpressionAttributeNames: {
-        "#name": "name",
-        "#sku": "sku",
-        "#description": "description",
-        "#price": "price",
-        "#stock": "stock"
+        "#items": "items",
+        "#date": "date",
+        "#status": "status"
       },
       ExpressionAttributeValues: {
-        ":name": dataRequest.name,
-        ":sku": dataRequest.sku,
-        ":description": dataRequest.description,
-        ":price": dataRequest.price,
-        ":stock": dataRequest.stock,
+        ":items": dataRequest.items,
+        ":date": dataRequest.date,
+        ":status": dataRequest.status,
         ":timestamp": new Date().getTime()
       },
       ReturnValues: "UPDATED_NEW"
     };
     return databaseService.update(params);
   }).then((results) => {
-    response = new ResponseModel(__spreadValues({}, results.Attributes), 200, "Product successfully updated");
+    response = new ResponseModel(__spreadValues({}, results.Attributes), 200, "Order successfully updated");
   }).catch((error) => {
-    response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Product cannot be updated");
+    response = error instanceof ResponseModel ? error : new ResponseModel({}, 500, "Order cannot be updated");
   }).then(() => {
     return response.generate();
   });
@@ -2230,26 +2211,14 @@ var softDelete = async (event) => {
     event
   });
 };
-var readList = async (event) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-  return formatJSONResponse({
-    message: `read serverless`,
-    event
-  });
-};
 var createSL = middyfy(create);
 var readSL = middyfy(read);
 var updateSL = middyfy(update);
 var softDeleteSL = middyfy(softDelete);
-var readListSL = middyfy(readList);
 module.exports = __toCommonJS(handler_exports);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   createSL,
-  readListSL,
   readSL,
   softDeleteSL,
   updateSL

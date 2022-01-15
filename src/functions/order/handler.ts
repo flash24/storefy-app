@@ -37,7 +37,7 @@ const create: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (e
         })
         .catch((error) => {
             // Set Error Response
-            response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'Product cannot be created');
+            response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'Order cannot be created');
         })
         .then(() => {
             // Return API Response
@@ -80,35 +80,31 @@ const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (e
   let response: any;
   // Initialise database service
   const databaseService = new DatabaseService();
-  const dataRequest: {id: string, name: string, sku: string, description : string, price: number, stock: number} = event.body
+  const dataRequest: {id: string, items: [], date: string, status : string} = event.body
   // Destructure environmental variable
-  const { PRODUCT_TABLE } = process.env;
+  const { ORDER_TABLE } = process.env;
   return Promise.all([
     validateAgainstConstraints(event.body, updateConstraints),
-    databaseService.getItem({key: dataRequest.id, tableName: PRODUCT_TABLE})
+    databaseService.getItem({key: dataRequest.id, tableName: ORDER_TABLE})
 ])
     .then(() => {
 
         // Initialise DynamoDB UPDATE parameters
         const params = {
-            TableName: PRODUCT_TABLE,
+            TableName: ORDER_TABLE,
             Key: {
                 "id": dataRequest.id
             },
-            UpdateExpression: "set #name = :name,#sku = :sku,#description = :description,#price = :price,#stock = :stock, updatedAt = :timestamp",
+            UpdateExpression: "set #items = :items,#date = :date,#status = :status, updatedAt = :timestamp",
             ExpressionAttributeNames: {
-                "#name": "name",
-                "#sku": "sku",
-                "#description": "description",
-                "#price": "price",
-                "#stock": "stock",
+                "#items": "items",
+                "#date": "date",
+                "#status": "status"
             },
             ExpressionAttributeValues: {
-                ":name": dataRequest.name,
-                ":sku": dataRequest.sku,
-                ":description": dataRequest.description,
-                ":price": dataRequest.price,
-                ":stock": dataRequest.stock,
+                ":items": dataRequest.items,
+                ":date": dataRequest.date,
+                ":status": dataRequest.status,
                 ":timestamp": new Date().getTime(),
             },
             ReturnValues: "UPDATED_NEW"
@@ -118,11 +114,11 @@ const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (e
     })
     .then((results) => {
         // Set Success Response
-        response = new ResponseModel({ ...results.Attributes }, 200, 'Product successfully updated');
+        response = new ResponseModel({ ...results.Attributes }, 200, 'Order successfully updated');
     })
     .catch((error) => {
         // Set Error Response
-        response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'Product cannot be updated');
+        response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'Order cannot be updated');
     })
     .then(() => {
         // Return API Response
@@ -161,41 +157,9 @@ const softDelete: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = asyn
     event,
   });
 }
-const readList: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
-  try {
-    // const databaseService = new DatabaseService();
-    // const listModel = new ListModel({name:event.body.name});
-    // // Get model data
-    // const data = listModel.getEntityMappings();
-          
-    // // Initialise DynamoDB PUT parameters
-    // const params = {
-    //     TableName: process.env.LIST_TABLE,
-    //     Item: {
-    //         id: data.id,
-    //         name: data.name,
-    //         createdAt: data.timestamp,
-    //         updatedAt: data.timestamp,
-    //     }
-    // }
-    // console.log(params)
-    // Inserts item into DynamoDB table
-    // await databaseService.create(params);
-    // id = data.id 
-  } catch (error) {
-    console.log(error)
-  }
-
-  // return data.id;
-  return formatJSONResponse({
-    message: `read serverless`,
-    event,
-  });
-}
 const createSL = middyfy(create);
 const readSL = middyfy(read);
 const updateSL = middyfy(update);
 const softDeleteSL = middyfy(softDelete);
-const readListSL = middyfy(readList);
 
-export {createSL, readSL, readListSL, updateSL, softDeleteSL}
+export {createSL, readSL, updateSL, softDeleteSL}

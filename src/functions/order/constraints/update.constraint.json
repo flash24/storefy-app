@@ -1,38 +1,26 @@
 {
-    "id": {
-      "presence": {
-        "allowEmpty": false
-      },
-      "type": "string"
+  "id": {
+    "presence": {
+      "allowEmpty": false
     },
-    "sku": {
-      "presence": {
-        "allowEmpty": false
-      },
-      "type": "string"
+    "type": "string"
+  },
+  "items": {
+    "presence": {
+      "allowEmpty": false
     },
-    "description": {
-      "presence": {
-        "allowEmpty": false
-      },
-      "type": "string"
+    "type": "array"
+  },
+  "date": {
+    "presence": {
+      "allowEmpty": false
     },
-    "price": {
-      "presence": {
-        "allowEmpty": false
-      },
-      "type": "number"
+    "type": "string"
+  },
+  "status": {
+    "presence": {
+      "allowEmpty": false
     },
-    "stock": {
-      "presence": {
-        "allowEmpty": false
-      },
-      "type": "number"
-    },
-    "name": {
-      "presence": {
-        "allowEmpty": false
-      },
-      "type": "string"
-    }
+    "type": "string"
   }
+}

@@ -1809,19 +1809,9 @@ var require_validate2 = __commonJS({
 var handler_exports = {};
 __export(handler_exports, {
   createSL: () => createSL,
-  deleteSL: () => deleteSL,
-  readListSL: () => readListSL,
   readSL: () => readSL,
   updateSL: () => updateSL
 });
-
-// src/libs/apiGateway.ts
-var formatJSONResponse = (response) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(response)
-  };
-};
 
 // src/libs/lambda.ts
 var import_core = __toESM(require_core());
@@ -2242,37 +2232,13 @@ var read = async (event) => {
     return response.generate();
   });
 };
-var deleteP = async (event) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-  return formatJSONResponse({
-    message: `read serverless`,
-    event
-  });
-};
-var readList = async (event) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
-  return formatJSONResponse({
-    message: `read serverless`,
-    event
-  });
-};
 var createSL = middyfy(create);
 var readSL = middyfy(read);
 var updateSL = middyfy(update);
-var deleteSL = middyfy(deleteP);
-var readListSL = middyfy(readList);
 module.exports = __toCommonJS(handler_exports);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   createSL,
-  deleteSL,
-  readListSL,
   readSL,
   updateSL
 });

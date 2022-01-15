@@ -23,26 +23,10 @@ const functions = {
       {
         http: {
           method: "get",
-          path: "product/{ID}",
+          path: "product",
           request: {
             schemas: {
               "application/json": readSchema,
-            },
-          },
-        },
-      },
-    ],
-  },
-  readProducts: {
-    handler: `${handlerPath(__dirname)}/handler.readListSL`,
-    events: [
-      {
-        http: {
-          method: "get",
-          path: "product/list",
-          request: {
-            schemas: {
-              "application/json": {},
             },
           },
         },
@@ -64,22 +48,6 @@ const functions = {
         },
       },
     ],
-  },
-  deleteProduct: {
-    handler: `${handlerPath(__dirname)}/handler.deleteSL`,
-    events: [
-      {
-        http: {
-          method: "delete",
-          path: "product",
-          request: {
-            schemas: {
-              "application/json": {},
-            },
-          },
-        },
-      },
-    ],
-  },
+  }
 };
 export default functions;
