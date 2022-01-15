@@ -31,25 +31,42 @@ The project code base is mainly located within the `src` folder. This folder is 
 ```
 .
 ├── src
-│   ├── functions               # Lambda configuration and source code folder
-│   │   ├── hello
-│   │   │   ├── handler.ts      # `Hello` lambda source code
-│   │   │   ├── index.ts        # `Hello` lambda Serverless configuration
-│   │   │   ├── mock.json       # `Hello` lambda input parameter, if any, for local invocation
-│   │   │   └── schema.ts       # `Hello` lambda input event JSON-Schema
+│   ├── configs                                 # Lambda configuration and source code folder
+|   |   ├── dynamodb-tables                     # data base config schema
+│   ├── enum                                    # enums collection for proyect
+|   |   ├── order.enum                          # enum for status order
+|   |   ├── response-message.enum               # enum for responce texts
+|   |   ├── status-code.enum                    # enum for responce codes http
+|   |   ├── status.enum                         # enum for responce texts http
+│   ├── functions                               # Lambda configuration and source code folder
+│   │   ├── order/product
+│   │   |   ├── constraints                     # constraints validatior rules
+│   │   |   |   ├── create.constraint           # constraint rule for create validation
+│   │   |   |   ├── update.constraint           # constraint rule for uodate validation
+│   │   |   |   ├── idRequest.constraint        # constraint rule for id request validation
+│   │   │   ├── handler.ts                      #  main lambda source code
+│   │   │   ├── index.ts                        # endpoint lambda Serverless configuration
+│   │   │   └── schema.ts                       # lambda input event JSON-Schema
 │   │   │
-│   │   └── index.ts            # Import/export of all lambda configurations
+│   │   └── index.ts                            # Import/export of all lambda configurations
+│   ├── interfaces                              # folder for interface
+│   │   ├── config.interface                    # interface for database service
+│   ├── models                                  # models folder for proyect
+│   │   ├── order.model                         # order table model
+│   │   ├── product.model                       # product table model
+│   │   └── respose.model                       # response model for http request
+│   ├── services
+│   │   └── database.service                    # database core file class
 │   │
-│   └── libs                    # Lambda shared code
-│       └── apiGateway.ts       # API Gateway specific helpers
-│       └── handlerResolver.ts  # Sharable library for resolving lambda handlers
-│       └── lambda.ts           # Lambda middleware
+│   └── libs                                    # Lambda shared code
+│       └── apiGateway.ts                       # API Gateway specific helpers
+│       └── handlerResolver.ts                  # Sharable library for resolving lambda handlers
+│       └── lambda.ts                           # Lambda middleware
 │
 ├── package.json
-├── serverless.ts               # Serverless service file
-├── tsconfig.json               # Typescript compiler configuration
-├── tsconfig.paths.json         # Typescript paths
-└── webpack.config.js           # Webpack configuration
+├── serverless.ts                               # Serverless service file
+├── tsconfig.json                               # Typescript compiler configuration
+├── tsconfig.paths.json                         # Typescript paths
 ```
 ### usage
 
