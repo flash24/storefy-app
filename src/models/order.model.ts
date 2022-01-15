@@ -22,12 +22,12 @@ export default class OrderModel {
     id = UUID(),
     items = [],
     date = new Date(),
-    status = null,
+    status = Status.PENDING,
   }: IProps) {
     this._id = id;
     this._items = items;
     this._date = date;
-    this._status = status;
+    this._status = Status[status];
   }
 
   /**

@@ -12,7 +12,6 @@ import idRequestConstraints from './constraints/idRequest.constraint.json';
 // Services
 import DatabaseService from "../../services/database.service";
 const create: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
-  console.log("ordeer")
   let response: any;
   return validateAgainstConstraints(event.body, createConstraints)
         .then(async () => {
@@ -77,36 +76,59 @@ const read: ValidatedEventAPIGatewayProxyEvent<typeof readSchema> = async (event
       return response.generate()
   });
 }
-const update: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
-  try {
-    // const databaseService = new DatabaseService();
-    // const listModel = new ListModel({name:event.body.name});
-    // // Get model data
-    // const data = listModel.getEntityMappings();
-          
-    // // Initialise DynamoDB PUT parameters
-    // const params = {
-    //     TableName: process.env.LIST_TABLE,
-    //     Item: {
-    //         id: data.id,
-    //         name: data.name,
-    //         createdAt: data.timestamp,
-    //         updatedAt: data.timestamp,
-    //     }
-    // }
-    // console.log(params)
-    // Inserts item into DynamoDB table
-    // await databaseService.create(params);
-    // id = data.id 
-  } catch (error) {
-    console.log(error)
-  }
+const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (event) => {
+  let response: any;
+  // Initialise database service
+  const databaseService = new DatabaseService();
+  const dataRequest: {id: string, name: string, sku: string, description : string, price: number, stock: number} = event.body
+  // Destructure environmental variable
+  const { PRODUCT_TABLE } = process.env;
+  return Promise.all([
+    validateAgainstConstraints(event.body, updateConstraints),
+    databaseService.getItem({key: dataRequest.id, tableName: PRODUCT_TABLE})
+])
+    .then(() => {
 
-  // return data.id;
-  return formatJSONResponse({
-    message: `read serverless`,
-    event,
-  });
+        // Initialise DynamoDB UPDATE parameters
+        const params = {
+            TableName: PRODUCT_TABLE,
+            Key: {
+                "id": dataRequest.id
+            },
+            UpdateExpression: "set #name = :name,#sku = :sku,#description = :description,#price = :price,#stock = :stock, updatedAt = :timestamp",
+            ExpressionAttributeNames: {
+                "#name": "name",
+                "#sku": "sku",
+                "#description": "description",
+                "#price": "price",
+                "#stock": "stock",
+            },
+            ExpressionAttributeValues: {
+                ":name": dataRequest.name,
+                ":sku": dataRequest.sku,
+                ":description": dataRequest.description,
+                ":price": dataRequest.price,
+                ":stock": dataRequest.stock,
+                ":timestamp": new Date().getTime(),
+            },
+            ReturnValues: "UPDATED_NEW"
+        }
+        // Updates Item in DynamoDB table
+        return databaseService.update(params);
+    })
+    .then((results) => {
+        // Set Success Response
+        response = new ResponseModel({ ...results.Attributes }, 200, 'Product successfully updated');
+    })
+    .catch((error) => {
+        // Set Error Response
+        response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'Product cannot be updated');
+    })
+    .then(() => {
+        // Return API Response
+        return response.generate()
+    });
+
 }
 const softDelete: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
   try {
