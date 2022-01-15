@@ -244,30 +244,30 @@ var require_util = __commonJS({
         })
       }
     };
-    var createPrefetchClient = (options2) => {
-      const awsClientOptions = __spreadValues(__spreadValues({}, awsClientDefaultOptions), options2.awsClientOptions);
-      const client = new options2.AwsClient(awsClientOptions);
-      if (options2.awsClientCapture) {
-        return options2.awsClientCapture(client);
+    var createPrefetchClient = (options) => {
+      const awsClientOptions = __spreadValues(__spreadValues({}, awsClientDefaultOptions), options.awsClientOptions);
+      const client = new options.AwsClient(awsClientOptions);
+      if (options.awsClientCapture) {
+        return options.awsClientCapture(client);
       }
       return client;
     };
-    var createClient = async (options2, request) => {
+    var createClient = async (options, request) => {
       let awsClientCredentials = {};
-      if (options2.awsClientAssumeRole) {
+      if (options.awsClientAssumeRole) {
         if (!request)
           throw new Error("Request required when assuming role");
         awsClientCredentials = await getInternal({
-          credentials: options2.awsClientAssumeRole
+          credentials: options.awsClientAssumeRole
         }, request);
       }
-      awsClientCredentials = __spreadValues(__spreadValues({}, awsClientCredentials), options2.awsClientOptions);
-      return createPrefetchClient(__spreadProps(__spreadValues({}, options2), {
+      awsClientCredentials = __spreadValues(__spreadValues({}, awsClientCredentials), options.awsClientOptions);
+      return createPrefetchClient(__spreadProps(__spreadValues({}, options), {
         awsClientOptions: awsClientCredentials
       }));
     };
-    var canPrefetch = (options2) => {
-      return !(options2 !== null && options2 !== void 0 && options2.awsClientAssumeRole) && !(options2 !== null && options2 !== void 0 && options2.disablePrefetch);
+    var canPrefetch = (options) => {
+      return !(options !== null && options !== void 0 && options.awsClientAssumeRole) && !(options !== null && options !== void 0 && options.disablePrefetch);
     };
     var getInternal = async (variables, request) => {
       if (!variables || !request)
@@ -309,11 +309,11 @@ var require_util = __commonJS({
       return key.replace(sanitizeKeyPrefixLeadingNumber, "_$1").replace(sanitizeKeyRemoveDisallowedChar, "_");
     };
     var cache = {};
-    var processCache = (options2, fetch = () => void 0, request) => {
+    var processCache = (options, fetch = () => void 0, request) => {
       const {
         cacheExpiry,
         cacheKey
-      } = options2;
+      } = options;
       if (cacheExpiry) {
         const cached = getCache(cacheKey);
         const unexpired = cached && (cacheExpiry < 0 || cached.expiry > Date.now());
@@ -452,7 +452,7 @@ var require_http_json_body_parser = __commonJS({
       reviver: void 0
     };
     var httpJsonBodyParserMiddleware = (opts = {}) => {
-      const options2 = __spreadValues(__spreadValues({}, defaults), opts);
+      const options = __spreadValues(__spreadValues({}, defaults), opts);
       const httpJsonBodyParserMiddlewareBefore = async (request) => {
         var _headers$ContentType;
         const {
@@ -464,7 +464,7 @@ var require_http_json_body_parser = __commonJS({
           try {
             const data = request.event.isBase64Encoded ? Buffer.from(body, "base64").toString() : body;
             request.event.rawBody = body;
-            request.event.body = JSON.parse(data, options2.reviver);
+            request.event.body = JSON.parse(data, options.reviver);
           } catch (err) {
             const {
               createError
@@ -583,14 +583,14 @@ var require_v1 = __commonJS({
     var _clockseq;
     var _lastMSecs = 0;
     var _lastNSecs = 0;
-    function v12(options2, buf, offset) {
+    function v12(options, buf, offset) {
       let i = buf && offset || 0;
       const b = buf || new Array(16);
-      options2 = options2 || {};
-      let node = options2.node || _nodeId;
-      let clockseq = options2.clockseq !== void 0 ? options2.clockseq : _clockseq;
+      options = options || {};
+      let node = options.node || _nodeId;
+      let clockseq = options.clockseq !== void 0 ? options.clockseq : _clockseq;
       if (node == null || clockseq == null) {
-        const seedBytes = options2.random || (options2.rng || _rng.default)();
+        const seedBytes = options.random || (options.rng || _rng.default)();
         if (node == null) {
           node = _nodeId = [seedBytes[0] | 1, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
         }
@@ -598,13 +598,13 @@ var require_v1 = __commonJS({
           clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 16383;
         }
       }
-      let msecs = options2.msecs !== void 0 ? options2.msecs : Date.now();
-      let nsecs = options2.nsecs !== void 0 ? options2.nsecs : _lastNSecs + 1;
+      let msecs = options.msecs !== void 0 ? options.msecs : Date.now();
+      let nsecs = options.nsecs !== void 0 ? options.nsecs : _lastNSecs + 1;
       const dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 1e4;
-      if (dt < 0 && options2.clockseq === void 0) {
+      if (dt < 0 && options.clockseq === void 0) {
         clockseq = clockseq + 1 & 16383;
       }
-      if ((dt < 0 || msecs > _lastMSecs) && options2.nsecs === void 0) {
+      if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === void 0) {
         nsecs = 0;
       }
       if (nsecs >= 1e4) {
@@ -797,9 +797,9 @@ var require_v4 = __commonJS({
     function _interopRequireDefault(obj) {
       return obj && obj.__esModule ? obj : { default: obj };
     }
-    function v42(options2, buf, offset) {
-      options2 = options2 || {};
-      const rnds = options2.random || (options2.rng || _rng.default)();
+    function v42(options, buf, offset) {
+      options = options || {};
+      const rnds = options.random || (options.rng || _rng.default)();
       rnds[6] = rnds[6] & 15 | 64;
       rnds[8] = rnds[8] & 63 | 128;
       if (buf) {
@@ -1090,20 +1090,45 @@ var ResponseModel = class {
 };
 
 // src/services/database.service.ts
-var options = {};
-if (process.env.IS_OFFLINE) {
-  options = {
-    region: "localhost",
-    endpoint: "http://localhost:8000"
-  };
+var {
+  STAGE,
+  DYNAMODB_LOCAL_STAGE,
+  DYNAMODB_LOCAL_ACCESS_KEY_ID,
+  DYNAMODB_LOCAL_SECRET_ACCESS_KEY,
+  DYNAMODB_LOCAL_ENDPOINT
+} = process.env;
+var config2 = { region: "eu-west-1" };
+if (STAGE === DYNAMODB_LOCAL_STAGE) {
+  config2.accessKeyId = DYNAMODB_LOCAL_ACCESS_KEY_ID;
+  config2.secretAccessKey = DYNAMODB_LOCAL_SECRET_ACCESS_KEY;
+  config2.endpoint = DYNAMODB_LOCAL_ENDPOINT;
 }
-var documentClient = new AWS.DynamoDB.DocumentClient(options);
+AWS.config.update(config2);
+var documentClient = new AWS.DynamoDB.DocumentClient();
 var DatabaseService = class {
   constructor() {
+    this.getItem = async ({ key, hash, hashValue, tableName }) => {
+      const params = {
+        TableName: tableName,
+        Key: {
+          id: key
+        }
+      };
+      if (hash) {
+        params.Key[hash] = hashValue;
+      }
+      const results = await this.get(params);
+      if (Object.keys(results).length) {
+        return results;
+      }
+      console.error("Item does not exist");
+      throw new ResponseModel({ id: key }, 400 /* BAD_REQUEST */, "Invalid Request!" /* INVALID_REQUEST */);
+    };
     this.create = async (params) => {
       try {
         return await documentClient.put(params).promise();
       } catch (error) {
+        console.error(`create-error: ${error}`);
         throw new ResponseModel({}, 500, `create-error: ${error}`);
       }
     };
@@ -1111,6 +1136,7 @@ var DatabaseService = class {
       try {
         return await documentClient.batchWrite(params).promise();
       } catch (error) {
+        console.error(`batch-write-error: ${error}`);
         throw new ResponseModel({}, 500, `batch-write-error: ${error}`);
       }
     };
@@ -1118,6 +1144,7 @@ var DatabaseService = class {
       try {
         return await documentClient.update(params).promise();
       } catch (error) {
+        console.error(`update-error: ${error}`);
         throw new ResponseModel({}, 500, `update-error: ${error}`);
       }
     };
@@ -1125,13 +1152,19 @@ var DatabaseService = class {
       try {
         return await documentClient.query(params).promise();
       } catch (error) {
+        console.error(`query-error: ${error}`);
         throw new ResponseModel({}, 500, `query-error: ${error}`);
       }
     };
     this.get = async (params) => {
+      console.log("DB GET - STAGE: ", STAGE);
+      console.log("DB GET - params.TableName: ", params.TableName);
+      console.log("DB GET - params.Key: ", params.Key);
       try {
         return await documentClient.get(params).promise();
       } catch (error) {
+        console.error(`get-error - TableName: ${params.TableName}`);
+        console.error(`get-error: ${error}`);
         throw new ResponseModel({}, 500, `get-error: ${error}`);
       }
     };
@@ -1139,6 +1172,7 @@ var DatabaseService = class {
       try {
         return await documentClient.delete(params).promise();
       } catch (error) {
+        console.error(`delete-error: ${error}`);
         throw new ResponseModel({}, 500, `delete-error: ${error}`);
       }
     };

@@ -1,44 +1,36 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from '@libs/apiGateway';
 import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
-import { handlerPath } from '@libs/handlerResolver';
-import {createSchema} from './schema';
-import ListModel from "../../models/list.model";
-import ResponseModel from "../../models/response.model";
-import { validateAgainstConstraints } from "../../utils/util";
-import requestConstraints from './constraints/create.constraint.json';
+import {createSchema, updateSchema} from './schema';
+import ProductModel from "@models/product.model";
+import ResponseModel from "@models/response.model";
+import { validateAgainstConstraints } from "@libs/util";
+import createConstraints from './constraints/create.constraint.json';
+import updateConstraints from './constraints/update.constraint.json';
 // Services
 import DatabaseService from "../../services/database.service";
 
-console.log(handlerPath(__dirname))
 const create: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
-  let response;
-  return validateAgainstConstraints(event.body, requestConstraints)
+  let response: any;
+  return validateAgainstConstraints(event.body, createConstraints)
         .then(async () => {
-            console.log(event.body)
-            // Initialise database service
             const databaseService = new DatabaseService();
-        
-            // Initialise and hydrate model
-            // const listModel = new ListModel();
-        
-            // // Get model data
-            // const data = listModel.getEntityMappings();
-        
-            // // Initialise DynamoDB PUT parameters
-            // const params = {
-            //     TableName: process.env.LIST_TABLE,
-            //     Item: {
-            //         id: data.id,
-            //         name: data.name,
-            //         createdAt: data.timestamp,
-            //         updatedAt: data.timestamp,
-            //     }
-            // }
+            const productModel = new ProductModel(event.body);
+            const data = productModel.getEntityMappings();
+            const params = {
+                TableName: process.env.PRODUCT_TABLE,
+                Item: {
+                  id: data.id,
+                  name : data.name,
+                  sku : data.sku,
+                  description : data.description,
+                  price : data.price,
+                  stock : data.stock
+                }
+            }
             // // Inserts item into DynamoDB table
-            // await databaseService.create(params);
-            // return data.id;
-            return "asd"
+            await databaseService.create(params);
+            return data.id;
         })
         .then((listId) => {
             // Set Success Response
@@ -52,10 +44,57 @@ const create: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (e
             // Return API Response
             return response.generate()
         });
+}
+const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (event) => {
+  let response: any;
+  // Initialise database service
+  const databaseService = new DatabaseService();
 
-  // return data.id;
+  // Destructure environmental variable
+  const { PRODUCT_TABLE } = process.env;
+//   return Promise.all([
+//     validateAgainstConstraints(event.body, updateConstraints),
+//     databaseService.getItem({key: listId, tableName: PRODUCT_TABLE})
+// ])
+//     .then(() => {
+
+//         // Initialise DynamoDB UPDATE parameters
+//         const params = {
+//             TableName: PRODUCT_TABLE,
+//             Key: {
+//                 "id": listId
+//             },
+//             UpdateExpression: "set #name = :name, updatedAt = :timestamp",
+//             ExpressionAttributeNames: {
+//                 "#name": "name"
+//             },
+//             ExpressionAttributeValues: {
+//                 ":name": name,
+//                 ":timestamp": new Date().getTime(),
+//             },
+//             ReturnValues: "UPDATED_NEW"
+//         }
+//         // Updates Item in DynamoDB table
+//         return databaseService.update(params);
+//     })
+//     .then((results) => {
+//         // Set Success Response
+//         response = new ResponseModel({ ...results.Attributes }, 200, 'To-do list successfully updated');
+//     })
+//     .catch((error) => {
+//         // Set Error Response
+//         response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'To-do list cannot be updated');
+//     })
+//     .then(() => {
+//         // Return API Response
+//         return response.generate()
+//     });
+
+  // Destructure request data
+  // const { listId, name } = requestData
+
   return formatJSONResponse({
-    message: `Hello , welcome to the exciting Serverless world! your id : ${id}`,
+    message: `read serverless`,
     event,
   });
 }
@@ -68,38 +107,7 @@ const read: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (eve
           
     // // Initialise DynamoDB PUT parameters
     // const params = {
-    //     TableName: process.env.LIST_TABLE,
-    //     Item: {
-    //         id: data.id,
-    //         name: data.name,
-    //         createdAt: data.timestamp,
-    //         updatedAt: data.timestamp,
-    //     }
-    // }
-    // console.log(params)
-    // Inserts item into DynamoDB table
-    // await databaseService.create(params);
-    // id = data.id 
-  } catch (error) {
-    console.log(error)
-  }
-
-  // return data.id;
-  return formatJSONResponse({
-    message: `read serverless`,
-    event,
-  });
-}
-const update: ValidatedEventAPIGatewayProxyEvent<typeof createSchema> = async (event) => {
-  try {
-    // const databaseService = new DatabaseService();
-    // const listModel = new ListModel({name:event.body.name});
-    // // Get model data
-    // const data = listModel.getEntityMappings();
-          
-    // // Initialise DynamoDB PUT parameters
-    // const params = {
-    //     TableName: process.env.LIST_TABLE,
+    //     TableName: process.env.PRODUCT_TABLE,
     //     Item: {
     //         id: data.id,
     //         name: data.name,

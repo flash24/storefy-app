@@ -1,0 +1,38 @@
+{
+    "id": {
+      "presence": {
+        "allowEmpty": false
+      },
+      "type": "string"
+    },
+    "sku": {
+      "presence": {
+        "allowEmpty": false
+      },
+      "type": "string"
+    },
+    "description": {
+      "presence": {
+        "allowEmpty": false
+      },
+      "type": "string"
+    },
+    "price": {
+      "presence": {
+        "allowEmpty": false
+      },
+      "type": "number"
+    },
+    "stock": {
+      "presence": {
+        "allowEmpty": false
+      },
+      "type": "number"
+    },
+    "name": {
+      "presence": {
+        "allowEmpty": false
+      },
+      "type": "string"
+    }
+  }

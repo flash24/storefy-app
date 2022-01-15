@@ -4,6 +4,7 @@
     "paths": {
       "@functions/*": ["src/functions/*"],
       "@configs/*": ["src/configs/*"],
+      "@models/*": ["src/models/*"],
       "@libs/*": ["src/libs/*"]
     }
   }

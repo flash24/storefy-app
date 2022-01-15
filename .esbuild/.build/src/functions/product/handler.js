@@ -244,30 +244,30 @@ var require_util = __commonJS({
         })
       }
     };
-    var createPrefetchClient = (options2) => {
-      const awsClientOptions = __spreadValues(__spreadValues({}, awsClientDefaultOptions), options2.awsClientOptions);
-      const client = new options2.AwsClient(awsClientOptions);
-      if (options2.awsClientCapture) {
-        return options2.awsClientCapture(client);
+    var createPrefetchClient = (options) => {
+      const awsClientOptions = __spreadValues(__spreadValues({}, awsClientDefaultOptions), options.awsClientOptions);
+      const client = new options.AwsClient(awsClientOptions);
+      if (options.awsClientCapture) {
+        return options.awsClientCapture(client);
       }
       return client;
     };
-    var createClient = async (options2, request) => {
+    var createClient = async (options, request) => {
       let awsClientCredentials = {};
-      if (options2.awsClientAssumeRole) {
+      if (options.awsClientAssumeRole) {
         if (!request)
           throw new Error("Request required when assuming role");
         awsClientCredentials = await getInternal({
-          credentials: options2.awsClientAssumeRole
+          credentials: options.awsClientAssumeRole
         }, request);
       }
-      awsClientCredentials = __spreadValues(__spreadValues({}, awsClientCredentials), options2.awsClientOptions);
-      return createPrefetchClient(__spreadProps(__spreadValues({}, options2), {
+      awsClientCredentials = __spreadValues(__spreadValues({}, awsClientCredentials), options.awsClientOptions);
+      return createPrefetchClient(__spreadProps(__spreadValues({}, options), {
         awsClientOptions: awsClientCredentials
       }));
     };
-    var canPrefetch = (options2) => {
-      return !(options2 !== null && options2 !== void 0 && options2.awsClientAssumeRole) && !(options2 !== null && options2 !== void 0 && options2.disablePrefetch);
+    var canPrefetch = (options) => {
+      return !(options !== null && options !== void 0 && options.awsClientAssumeRole) && !(options !== null && options !== void 0 && options.disablePrefetch);
     };
     var getInternal = async (variables, request) => {
       if (!variables || !request)
@@ -309,11 +309,11 @@ var require_util = __commonJS({
       return key.replace(sanitizeKeyPrefixLeadingNumber, "_$1").replace(sanitizeKeyRemoveDisallowedChar, "_");
     };
     var cache = {};
-    var processCache = (options2, fetch = () => void 0, request) => {
+    var processCache = (options, fetch = () => void 0, request) => {
       const {
         cacheExpiry,
         cacheKey
-      } = options2;
+      } = options;
       if (cacheExpiry) {
         const cached = getCache(cacheKey);
         const unexpired = cached && (cacheExpiry < 0 || cached.expiry > Date.now());
@@ -452,7 +452,7 @@ var require_http_json_body_parser = __commonJS({
       reviver: void 0
     };
     var httpJsonBodyParserMiddleware = (opts = {}) => {
-      const options2 = __spreadValues(__spreadValues({}, defaults), opts);
+      const options = __spreadValues(__spreadValues({}, defaults), opts);
       const httpJsonBodyParserMiddlewareBefore = async (request) => {
         var _headers$ContentType;
         const {
@@ -464,7 +464,7 @@ var require_http_json_body_parser = __commonJS({
           try {
             const data = request.event.isBase64Encoded ? Buffer.from(body, "base64").toString() : body;
             request.event.rawBody = body;
-            request.event.body = JSON.parse(data, options2.reviver);
+            request.event.body = JSON.parse(data, options.reviver);
           } catch (err) {
             const {
               createError
@@ -481,22 +481,513 @@ var require_http_json_body_parser = __commonJS({
   }
 });
 
-// node_modules/validate.js/validate.js
+// node_modules/uuid/dist/rng.js
+var require_rng = __commonJS({
+  "node_modules/uuid/dist/rng.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = rng;
+    var _crypto = _interopRequireDefault(require("crypto"));
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var rnds8Pool = new Uint8Array(256);
+    var poolPtr = rnds8Pool.length;
+    function rng() {
+      if (poolPtr > rnds8Pool.length - 16) {
+        _crypto.default.randomFillSync(rnds8Pool);
+        poolPtr = 0;
+      }
+      return rnds8Pool.slice(poolPtr, poolPtr += 16);
+    }
+  }
+});
+
+// node_modules/uuid/dist/regex.js
+var require_regex = __commonJS({
+  "node_modules/uuid/dist/regex.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/validate.js
 var require_validate = __commonJS({
+  "node_modules/uuid/dist/validate.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _regex = _interopRequireDefault(require_regex());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function validate3(uuid2) {
+      return typeof uuid2 === "string" && _regex.default.test(uuid2);
+    }
+    var _default = validate3;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/stringify.js
+var require_stringify = __commonJS({
+  "node_modules/uuid/dist/stringify.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _validate = _interopRequireDefault(require_validate());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var byteToHex = [];
+    for (let i = 0; i < 256; ++i) {
+      byteToHex.push((i + 256).toString(16).substr(1));
+    }
+    function stringify2(arr, offset = 0) {
+      const uuid2 = (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+      if (!(0, _validate.default)(uuid2)) {
+        throw TypeError("Stringified UUID is invalid");
+      }
+      return uuid2;
+    }
+    var _default = stringify2;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/v1.js
+var require_v1 = __commonJS({
+  "node_modules/uuid/dist/v1.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _rng = _interopRequireDefault(require_rng());
+    var _stringify = _interopRequireDefault(require_stringify());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var _nodeId;
+    var _clockseq;
+    var _lastMSecs = 0;
+    var _lastNSecs = 0;
+    function v12(options, buf, offset) {
+      let i = buf && offset || 0;
+      const b = buf || new Array(16);
+      options = options || {};
+      let node = options.node || _nodeId;
+      let clockseq = options.clockseq !== void 0 ? options.clockseq : _clockseq;
+      if (node == null || clockseq == null) {
+        const seedBytes = options.random || (options.rng || _rng.default)();
+        if (node == null) {
+          node = _nodeId = [seedBytes[0] | 1, seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
+        }
+        if (clockseq == null) {
+          clockseq = _clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 16383;
+        }
+      }
+      let msecs = options.msecs !== void 0 ? options.msecs : Date.now();
+      let nsecs = options.nsecs !== void 0 ? options.nsecs : _lastNSecs + 1;
+      const dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 1e4;
+      if (dt < 0 && options.clockseq === void 0) {
+        clockseq = clockseq + 1 & 16383;
+      }
+      if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === void 0) {
+        nsecs = 0;
+      }
+      if (nsecs >= 1e4) {
+        throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");
+      }
+      _lastMSecs = msecs;
+      _lastNSecs = nsecs;
+      _clockseq = clockseq;
+      msecs += 122192928e5;
+      const tl = ((msecs & 268435455) * 1e4 + nsecs) % 4294967296;
+      b[i++] = tl >>> 24 & 255;
+      b[i++] = tl >>> 16 & 255;
+      b[i++] = tl >>> 8 & 255;
+      b[i++] = tl & 255;
+      const tmh = msecs / 4294967296 * 1e4 & 268435455;
+      b[i++] = tmh >>> 8 & 255;
+      b[i++] = tmh & 255;
+      b[i++] = tmh >>> 24 & 15 | 16;
+      b[i++] = tmh >>> 16 & 255;
+      b[i++] = clockseq >>> 8 | 128;
+      b[i++] = clockseq & 255;
+      for (let n = 0; n < 6; ++n) {
+        b[i + n] = node[n];
+      }
+      return buf || (0, _stringify.default)(b);
+    }
+    var _default = v12;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/parse.js
+var require_parse = __commonJS({
+  "node_modules/uuid/dist/parse.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _validate = _interopRequireDefault(require_validate());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function parse2(uuid2) {
+      if (!(0, _validate.default)(uuid2)) {
+        throw TypeError("Invalid UUID");
+      }
+      let v;
+      const arr = new Uint8Array(16);
+      arr[0] = (v = parseInt(uuid2.slice(0, 8), 16)) >>> 24;
+      arr[1] = v >>> 16 & 255;
+      arr[2] = v >>> 8 & 255;
+      arr[3] = v & 255;
+      arr[4] = (v = parseInt(uuid2.slice(9, 13), 16)) >>> 8;
+      arr[5] = v & 255;
+      arr[6] = (v = parseInt(uuid2.slice(14, 18), 16)) >>> 8;
+      arr[7] = v & 255;
+      arr[8] = (v = parseInt(uuid2.slice(19, 23), 16)) >>> 8;
+      arr[9] = v & 255;
+      arr[10] = (v = parseInt(uuid2.slice(24, 36), 16)) / 1099511627776 & 255;
+      arr[11] = v / 4294967296 & 255;
+      arr[12] = v >>> 24 & 255;
+      arr[13] = v >>> 16 & 255;
+      arr[14] = v >>> 8 & 255;
+      arr[15] = v & 255;
+      return arr;
+    }
+    var _default = parse2;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/v35.js
+var require_v35 = __commonJS({
+  "node_modules/uuid/dist/v35.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = _default;
+    exports.URL = exports.DNS = void 0;
+    var _stringify = _interopRequireDefault(require_stringify());
+    var _parse = _interopRequireDefault(require_parse());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function stringToBytes(str) {
+      str = unescape(encodeURIComponent(str));
+      const bytes = [];
+      for (let i = 0; i < str.length; ++i) {
+        bytes.push(str.charCodeAt(i));
+      }
+      return bytes;
+    }
+    var DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
+    exports.DNS = DNS;
+    var URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
+    exports.URL = URL;
+    function _default(name2, version2, hashfunc) {
+      function generateUUID(value, namespace, buf, offset) {
+        if (typeof value === "string") {
+          value = stringToBytes(value);
+        }
+        if (typeof namespace === "string") {
+          namespace = (0, _parse.default)(namespace);
+        }
+        if (namespace.length !== 16) {
+          throw TypeError("Namespace must be array-like (16 iterable integer values, 0-255)");
+        }
+        let bytes = new Uint8Array(16 + value.length);
+        bytes.set(namespace);
+        bytes.set(value, namespace.length);
+        bytes = hashfunc(bytes);
+        bytes[6] = bytes[6] & 15 | version2;
+        bytes[8] = bytes[8] & 63 | 128;
+        if (buf) {
+          offset = offset || 0;
+          for (let i = 0; i < 16; ++i) {
+            buf[offset + i] = bytes[i];
+          }
+          return buf;
+        }
+        return (0, _stringify.default)(bytes);
+      }
+      try {
+        generateUUID.name = name2;
+      } catch (err) {
+      }
+      generateUUID.DNS = DNS;
+      generateUUID.URL = URL;
+      return generateUUID;
+    }
+  }
+});
+
+// node_modules/uuid/dist/md5.js
+var require_md5 = __commonJS({
+  "node_modules/uuid/dist/md5.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _crypto = _interopRequireDefault(require("crypto"));
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function md5(bytes) {
+      if (Array.isArray(bytes)) {
+        bytes = Buffer.from(bytes);
+      } else if (typeof bytes === "string") {
+        bytes = Buffer.from(bytes, "utf8");
+      }
+      return _crypto.default.createHash("md5").update(bytes).digest();
+    }
+    var _default = md5;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/v3.js
+var require_v3 = __commonJS({
+  "node_modules/uuid/dist/v3.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _v = _interopRequireDefault(require_v35());
+    var _md = _interopRequireDefault(require_md5());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var v32 = (0, _v.default)("v3", 48, _md.default);
+    var _default = v32;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/v4.js
+var require_v4 = __commonJS({
+  "node_modules/uuid/dist/v4.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _rng = _interopRequireDefault(require_rng());
+    var _stringify = _interopRequireDefault(require_stringify());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function v42(options, buf, offset) {
+      options = options || {};
+      const rnds = options.random || (options.rng || _rng.default)();
+      rnds[6] = rnds[6] & 15 | 64;
+      rnds[8] = rnds[8] & 63 | 128;
+      if (buf) {
+        offset = offset || 0;
+        for (let i = 0; i < 16; ++i) {
+          buf[offset + i] = rnds[i];
+        }
+        return buf;
+      }
+      return (0, _stringify.default)(rnds);
+    }
+    var _default = v42;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/sha1.js
+var require_sha1 = __commonJS({
+  "node_modules/uuid/dist/sha1.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _crypto = _interopRequireDefault(require("crypto"));
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function sha1(bytes) {
+      if (Array.isArray(bytes)) {
+        bytes = Buffer.from(bytes);
+      } else if (typeof bytes === "string") {
+        bytes = Buffer.from(bytes, "utf8");
+      }
+      return _crypto.default.createHash("sha1").update(bytes).digest();
+    }
+    var _default = sha1;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/v5.js
+var require_v5 = __commonJS({
+  "node_modules/uuid/dist/v5.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _v = _interopRequireDefault(require_v35());
+    var _sha = _interopRequireDefault(require_sha1());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    var v52 = (0, _v.default)("v5", 80, _sha.default);
+    var _default = v52;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/nil.js
+var require_nil = __commonJS({
+  "node_modules/uuid/dist/nil.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _default = "00000000-0000-0000-0000-000000000000";
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/version.js
+var require_version = __commonJS({
+  "node_modules/uuid/dist/version.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    exports.default = void 0;
+    var _validate = _interopRequireDefault(require_validate());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+    function version2(uuid2) {
+      if (!(0, _validate.default)(uuid2)) {
+        throw TypeError("Invalid UUID");
+      }
+      return parseInt(uuid2.substr(14, 1), 16);
+    }
+    var _default = version2;
+    exports.default = _default;
+  }
+});
+
+// node_modules/uuid/dist/index.js
+var require_dist = __commonJS({
+  "node_modules/uuid/dist/index.js"(exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", {
+      value: true
+    });
+    Object.defineProperty(exports, "v1", {
+      enumerable: true,
+      get: function() {
+        return _v.default;
+      }
+    });
+    Object.defineProperty(exports, "v3", {
+      enumerable: true,
+      get: function() {
+        return _v2.default;
+      }
+    });
+    Object.defineProperty(exports, "v4", {
+      enumerable: true,
+      get: function() {
+        return _v3.default;
+      }
+    });
+    Object.defineProperty(exports, "v5", {
+      enumerable: true,
+      get: function() {
+        return _v4.default;
+      }
+    });
+    Object.defineProperty(exports, "NIL", {
+      enumerable: true,
+      get: function() {
+        return _nil.default;
+      }
+    });
+    Object.defineProperty(exports, "version", {
+      enumerable: true,
+      get: function() {
+        return _version.default;
+      }
+    });
+    Object.defineProperty(exports, "validate", {
+      enumerable: true,
+      get: function() {
+        return _validate.default;
+      }
+    });
+    Object.defineProperty(exports, "stringify", {
+      enumerable: true,
+      get: function() {
+        return _stringify.default;
+      }
+    });
+    Object.defineProperty(exports, "parse", {
+      enumerable: true,
+      get: function() {
+        return _parse.default;
+      }
+    });
+    var _v = _interopRequireDefault(require_v1());
+    var _v2 = _interopRequireDefault(require_v3());
+    var _v3 = _interopRequireDefault(require_v4());
+    var _v4 = _interopRequireDefault(require_v5());
+    var _nil = _interopRequireDefault(require_nil());
+    var _version = _interopRequireDefault(require_version());
+    var _validate = _interopRequireDefault(require_validate());
+    var _stringify = _interopRequireDefault(require_stringify());
+    var _parse = _interopRequireDefault(require_parse());
+    function _interopRequireDefault(obj) {
+      return obj && obj.__esModule ? obj : { default: obj };
+    }
+  }
+});
+
+// node_modules/validate.js/validate.js
+var require_validate2 = __commonJS({
   "node_modules/validate.js/validate.js"(exports, module2) {
     (function(exports2, module3, define2) {
       "use strict";
-      var validate2 = function(attributes, constraints, options2) {
-        options2 = v.extend({}, v.options, options2);
-        var results = v.runValidations(attributes, constraints, options2), attr, validator;
+      var validate3 = function(attributes, constraints, options) {
+        options = v.extend({}, v.options, options);
+        var results = v.runValidations(attributes, constraints, options), attr, validator;
         if (results.some(function(r) {
           return v.isPromise(r.error);
         })) {
           throw new Error("Use validate.async if you want support for promises");
         }
-        return validate2.processValidationResults(results, options2);
+        return validate3.processValidationResults(results, options);
       };
-      var v = validate2;
+      var v = validate3;
       v.extend = function(obj) {
         [].slice.call(arguments, 1).forEach(function(source) {
           for (var attr in source) {
@@ -505,30 +996,30 @@ var require_validate = __commonJS({
         });
         return obj;
       };
-      v.extend(validate2, {
+      v.extend(validate3, {
         version: {
           major: 0,
           minor: 13,
           patch: 1,
           metadata: null,
           toString: function() {
-            var version = v.format("%{major}.%{minor}.%{patch}", v.version);
+            var version2 = v.format("%{major}.%{minor}.%{patch}", v.version);
             if (!v.isEmpty(v.version.metadata)) {
-              version += "+" + v.version.metadata;
+              version2 += "+" + v.version.metadata;
             }
-            return version;
+            return version2;
           }
         },
         Promise: typeof Promise !== "undefined" ? Promise : null,
         EMPTY_STRING_REGEXP: /^\s*$/,
-        runValidations: function(attributes, constraints, options2) {
+        runValidations: function(attributes, constraints, options) {
           var results = [], attr, validatorName, value, validators, validator, validatorOptions, error;
           if (v.isDomElement(attributes) || v.isJqueryElement(attributes)) {
             attributes = v.collectFormValues(attributes);
           }
           for (attr in constraints) {
             value = v.getDeepObjectValue(attributes, attr);
-            validators = v.result(constraints[attr], value, attributes, attr, options2, constraints);
+            validators = v.result(constraints[attr], value, attributes, attr, options, constraints);
             for (validatorName in validators) {
               validator = v.validators[validatorName];
               if (!validator) {
@@ -536,7 +1027,7 @@ var require_validate = __commonJS({
                 throw new Error(error);
               }
               validatorOptions = validators[validatorName];
-              validatorOptions = v.result(validatorOptions, value, attributes, attr, options2, constraints);
+              validatorOptions = v.result(validatorOptions, value, attributes, attr, options, constraints);
               if (!validatorOptions) {
                 continue;
               }
@@ -544,41 +1035,41 @@ var require_validate = __commonJS({
                 attribute: attr,
                 value,
                 validator: validatorName,
-                globalOptions: options2,
+                globalOptions: options,
                 attributes,
                 options: validatorOptions,
-                error: validator.call(validator, value, validatorOptions, attr, attributes, options2)
+                error: validator.call(validator, value, validatorOptions, attr, attributes, options)
               });
             }
           }
           return results;
         },
-        processValidationResults: function(errors, options2) {
-          errors = v.pruneEmptyErrors(errors, options2);
-          errors = v.expandMultipleErrors(errors, options2);
-          errors = v.convertErrorMessages(errors, options2);
-          var format = options2.format || "grouped";
+        processValidationResults: function(errors, options) {
+          errors = v.pruneEmptyErrors(errors, options);
+          errors = v.expandMultipleErrors(errors, options);
+          errors = v.convertErrorMessages(errors, options);
+          var format = options.format || "grouped";
           if (typeof v.formatters[format] === "function") {
             errors = v.formatters[format](errors);
           } else {
-            throw new Error(v.format("Unknown format %{format}", options2));
+            throw new Error(v.format("Unknown format %{format}", options));
           }
           return v.isEmpty(errors) ? void 0 : errors;
         },
-        async: function(attributes, constraints, options2) {
-          options2 = v.extend({}, v.async.options, options2);
-          var WrapErrors = options2.wrapErrors || function(errors) {
+        async: function(attributes, constraints, options) {
+          options = v.extend({}, v.async.options, options);
+          var WrapErrors = options.wrapErrors || function(errors) {
             return errors;
           };
-          if (options2.cleanAttributes !== false) {
+          if (options.cleanAttributes !== false) {
             attributes = v.cleanAttributes(attributes, constraints);
           }
-          var results = v.runValidations(attributes, constraints, options2);
+          var results = v.runValidations(attributes, constraints, options);
           return new v.Promise(function(resolve, reject) {
             v.waitForResults(results).then(function() {
-              var errors = v.processValidationResults(results, options2);
+              var errors = v.processValidationResults(results, options);
               if (errors) {
-                reject(new WrapErrors(errors, options2, attributes, constraints));
+                reject(new WrapErrors(errors, options, attributes, constraints));
               } else {
                 resolve(attributes);
               }
@@ -587,12 +1078,12 @@ var require_validate = __commonJS({
             });
           });
         },
-        single: function(value, constraints, options2) {
-          options2 = v.extend({}, v.single.options, options2, {
+        single: function(value, constraints, options) {
+          options = v.extend({}, v.single.options, options, {
             format: "flat",
             fullMessages: false
           });
-          return v({ single: value }, { single: constraints }, options2);
+          return v({ single: value }, { single: constraints }, options);
         },
         waitForResults: function(results) {
           return results.reduce(function(memo, result) {
@@ -721,8 +1212,8 @@ var require_validate = __commonJS({
             return "" + m1 + " " + m2.toLowerCase();
           }).toLowerCase();
         },
-        stringifyValue: function(value, options2) {
-          var prettify = options2 && options2.prettify || v.prettify;
+        stringifyValue: function(value, options) {
+          var prettify = options && options.prettify || v.prettify;
           return prettify(value);
         },
         isString: function(value) {
@@ -793,7 +1284,7 @@ var require_validate = __commonJS({
             }
           });
         },
-        collectFormValues: function(form, options2) {
+        collectFormValues: function(form, options) {
           var values = {}, i, j, input, inputs, option, value;
           if (v.isJqueryElement(form)) {
             form = form[0];
@@ -801,7 +1292,7 @@ var require_validate = __commonJS({
           if (!form) {
             return values;
           }
-          options2 = options2 || {};
+          options = options || {};
           inputs = form.querySelectorAll("input[name], textarea[name]");
           for (i = 0; i < inputs.length; ++i) {
             input = inputs.item(i);
@@ -809,7 +1300,7 @@ var require_validate = __commonJS({
               continue;
             }
             var name2 = input.name.replace(/\./g, "\\\\.");
-            value = v.sanitizeFormValue(input.value, options2);
+            value = v.sanitizeFormValue(input.value, options);
             if (input.type === "number") {
               value = value ? +value : null;
             } else if (input.type === "checkbox") {
@@ -838,22 +1329,22 @@ var require_validate = __commonJS({
               for (j in input.options) {
                 option = input.options[j];
                 if (option && option.selected) {
-                  value.push(v.sanitizeFormValue(option.value, options2));
+                  value.push(v.sanitizeFormValue(option.value, options));
                 }
               }
             } else {
               var _val = typeof input.options[input.selectedIndex] !== "undefined" ? input.options[input.selectedIndex].value : "";
-              value = v.sanitizeFormValue(_val, options2);
+              value = v.sanitizeFormValue(_val, options);
             }
             values[input.name] = value;
           }
           return values;
         },
-        sanitizeFormValue: function(value, options2) {
-          if (options2.trim && v.isString(value)) {
+        sanitizeFormValue: function(value, options) {
+          if (options.trim && v.isString(value)) {
             value = value.trim();
           }
-          if (options2.nullify !== false && value === "") {
+          if (options.nullify !== false && value === "") {
             return null;
           }
           return value;
@@ -882,9 +1373,9 @@ var require_validate = __commonJS({
           });
           return ret;
         },
-        convertErrorMessages: function(errors, options2) {
-          options2 = options2 || {};
-          var ret = [], prettify = options2.prettify || v.prettify;
+        convertErrorMessages: function(errors, options) {
+          options = options || {};
+          var ret = [], prettify = options.prettify || v.prettify;
           errors.forEach(function(errorInfo) {
             var error = v.result(errorInfo.error, errorInfo.value, errorInfo.attribute, errorInfo.options, errorInfo.attributes, errorInfo.globalOptions);
             if (!v.isString(error)) {
@@ -893,12 +1384,12 @@ var require_validate = __commonJS({
             }
             if (error[0] === "^") {
               error = error.slice(1);
-            } else if (options2.fullMessages !== false) {
+            } else if (options.fullMessages !== false) {
               error = v.capitalize(prettify(errorInfo.attribute)) + " " + error;
             }
             error = error.replace(/\\\^/g, "^");
             error = v.format(error, {
-              value: v.stringifyValue(errorInfo.value, options2)
+              value: v.stringifyValue(errorInfo.value, options)
             });
             ret.push(v.extend({}, errorInfo, { error }));
           });
@@ -961,17 +1452,17 @@ var require_validate = __commonJS({
           whitelist = buildObjectWhitelist(whitelist);
           return cleanRecursive(attributes, whitelist);
         },
-        exposeModule: function(validate3, root, exports3, module4, define3) {
+        exposeModule: function(validate4, root, exports3, module4, define3) {
           if (exports3) {
             if (module4 && module4.exports) {
-              exports3 = module4.exports = validate3;
+              exports3 = module4.exports = validate4;
             }
-            exports3.validate = validate3;
+            exports3.validate = validate4;
           } else {
-            root.validate = validate3;
-            if (validate3.isFunction(define3) && define3.amd) {
+            root.validate = validate4;
+            if (validate4.isFunction(define3) && define3.amd) {
               define3([], function() {
-                return validate3;
+                return validate4;
               });
             }
           }
@@ -987,47 +1478,47 @@ var require_validate = __commonJS({
           }
         }
       });
-      validate2.validators = {
-        presence: function(value, options2) {
-          options2 = v.extend({}, this.options, options2);
-          if (options2.allowEmpty !== false ? !v.isDefined(value) : v.isEmpty(value)) {
-            return options2.message || this.message || "can't be blank";
+      validate3.validators = {
+        presence: function(value, options) {
+          options = v.extend({}, this.options, options);
+          if (options.allowEmpty !== false ? !v.isDefined(value) : v.isEmpty(value)) {
+            return options.message || this.message || "can't be blank";
           }
         },
-        length: function(value, options2, attribute) {
+        length: function(value, options, attribute) {
           if (!v.isDefined(value)) {
             return;
           }
-          options2 = v.extend({}, this.options, options2);
-          var is = options2.is, maximum = options2.maximum, minimum = options2.minimum, tokenizer = options2.tokenizer || function(val) {
+          options = v.extend({}, this.options, options);
+          var is = options.is, maximum = options.maximum, minimum = options.minimum, tokenizer = options.tokenizer || function(val) {
             return val;
           }, err, errors = [];
           value = tokenizer(value);
           var length = value.length;
           if (!v.isNumber(length)) {
-            return options2.message || this.notValid || "has an incorrect length";
+            return options.message || this.notValid || "has an incorrect length";
           }
           if (v.isNumber(is) && length !== is) {
-            err = options2.wrongLength || this.wrongLength || "is the wrong length (should be %{count} characters)";
+            err = options.wrongLength || this.wrongLength || "is the wrong length (should be %{count} characters)";
             errors.push(v.format(err, { count: is }));
           }
           if (v.isNumber(minimum) && length < minimum) {
-            err = options2.tooShort || this.tooShort || "is too short (minimum is %{count} characters)";
+            err = options.tooShort || this.tooShort || "is too short (minimum is %{count} characters)";
             errors.push(v.format(err, { count: minimum }));
           }
           if (v.isNumber(maximum) && length > maximum) {
-            err = options2.tooLong || this.tooLong || "is too long (maximum is %{count} characters)";
+            err = options.tooLong || this.tooLong || "is too long (maximum is %{count} characters)";
             errors.push(v.format(err, { count: maximum }));
           }
           if (errors.length > 0) {
-            return options2.message || errors;
+            return options.message || errors;
           }
         },
-        numericality: function(value, options2, attribute, attributes, globalOptions) {
+        numericality: function(value, options, attribute, attributes, globalOptions) {
           if (!v.isDefined(value)) {
             return;
           }
-          options2 = v.extend({}, this.options, options2);
+          options = v.extend({}, this.options, options);
           var errors = [], name2, count, checks = {
             greaterThan: function(v2, c) {
               return v2 > c;
@@ -1047,74 +1538,74 @@ var require_validate = __commonJS({
             divisibleBy: function(v2, c) {
               return v2 % c === 0;
             }
-          }, prettify = options2.prettify || globalOptions && globalOptions.prettify || v.prettify;
-          if (v.isString(value) && options2.strict) {
+          }, prettify = options.prettify || globalOptions && globalOptions.prettify || v.prettify;
+          if (v.isString(value) && options.strict) {
             var pattern = "^-?(0|[1-9]\\d*)";
-            if (!options2.onlyInteger) {
+            if (!options.onlyInteger) {
               pattern += "(\\.\\d+)?";
             }
             pattern += "$";
             if (!new RegExp(pattern).test(value)) {
-              return options2.message || options2.notValid || this.notValid || this.message || "must be a valid number";
+              return options.message || options.notValid || this.notValid || this.message || "must be a valid number";
             }
           }
-          if (options2.noStrings !== true && v.isString(value) && !v.isEmpty(value)) {
+          if (options.noStrings !== true && v.isString(value) && !v.isEmpty(value)) {
             value = +value;
           }
           if (!v.isNumber(value)) {
-            return options2.message || options2.notValid || this.notValid || this.message || "is not a number";
+            return options.message || options.notValid || this.notValid || this.message || "is not a number";
           }
-          if (options2.onlyInteger && !v.isInteger(value)) {
-            return options2.message || options2.notInteger || this.notInteger || this.message || "must be an integer";
+          if (options.onlyInteger && !v.isInteger(value)) {
+            return options.message || options.notInteger || this.notInteger || this.message || "must be an integer";
           }
           for (name2 in checks) {
-            count = options2[name2];
+            count = options[name2];
             if (v.isNumber(count) && !checks[name2](value, count)) {
               var key = "not" + v.capitalize(name2);
-              var msg = options2[key] || this[key] || this.message || "must be %{type} %{count}";
+              var msg = options[key] || this[key] || this.message || "must be %{type} %{count}";
               errors.push(v.format(msg, {
                 count,
                 type: prettify(name2)
               }));
             }
           }
-          if (options2.odd && value % 2 !== 1) {
-            errors.push(options2.notOdd || this.notOdd || this.message || "must be odd");
+          if (options.odd && value % 2 !== 1) {
+            errors.push(options.notOdd || this.notOdd || this.message || "must be odd");
           }
-          if (options2.even && value % 2 !== 0) {
-            errors.push(options2.notEven || this.notEven || this.message || "must be even");
+          if (options.even && value % 2 !== 0) {
+            errors.push(options.notEven || this.notEven || this.message || "must be even");
           }
           if (errors.length) {
-            return options2.message || errors;
+            return options.message || errors;
           }
         },
-        datetime: v.extend(function(value, options2) {
+        datetime: v.extend(function(value, options) {
           if (!v.isFunction(this.parse) || !v.isFunction(this.format)) {
             throw new Error("Both the parse and format functions needs to be set to use the datetime/date validator");
           }
           if (!v.isDefined(value)) {
             return;
           }
-          options2 = v.extend({}, this.options, options2);
-          var err, errors = [], earliest = options2.earliest ? this.parse(options2.earliest, options2) : NaN, latest = options2.latest ? this.parse(options2.latest, options2) : NaN;
-          value = this.parse(value, options2);
-          if (isNaN(value) || options2.dateOnly && value % 864e5 !== 0) {
-            err = options2.notValid || options2.message || this.notValid || "must be a valid date";
+          options = v.extend({}, this.options, options);
+          var err, errors = [], earliest = options.earliest ? this.parse(options.earliest, options) : NaN, latest = options.latest ? this.parse(options.latest, options) : NaN;
+          value = this.parse(value, options);
+          if (isNaN(value) || options.dateOnly && value % 864e5 !== 0) {
+            err = options.notValid || options.message || this.notValid || "must be a valid date";
             return v.format(err, { value: arguments[0] });
           }
           if (!isNaN(earliest) && value < earliest) {
-            err = options2.tooEarly || options2.message || this.tooEarly || "must be no earlier than %{date}";
+            err = options.tooEarly || options.message || this.tooEarly || "must be no earlier than %{date}";
             err = v.format(err, {
-              value: this.format(value, options2),
-              date: this.format(earliest, options2)
+              value: this.format(value, options),
+              date: this.format(earliest, options)
             });
             errors.push(err);
           }
           if (!isNaN(latest) && value > latest) {
-            err = options2.tooLate || options2.message || this.tooLate || "must be no later than %{date}";
+            err = options.tooLate || options.message || this.tooLate || "must be no later than %{date}";
             err = v.format(err, {
-              date: this.format(latest, options2),
-              value: this.format(value, options2)
+              date: this.format(latest, options),
+              value: this.format(value, options)
             });
             errors.push(err);
           }
@@ -1125,16 +1616,16 @@ var require_validate = __commonJS({
           parse: null,
           format: null
         }),
-        date: function(value, options2) {
-          options2 = v.extend({}, options2, { dateOnly: true });
-          return v.validators.datetime.call(v.validators.datetime, value, options2);
+        date: function(value, options) {
+          options = v.extend({}, options, { dateOnly: true });
+          return v.validators.datetime.call(v.validators.datetime, value, options);
         },
-        format: function(value, options2) {
-          if (v.isString(options2) || options2 instanceof RegExp) {
-            options2 = { pattern: options2 };
+        format: function(value, options) {
+          if (v.isString(options) || options instanceof RegExp) {
+            options = { pattern: options };
           }
-          options2 = v.extend({}, this.options, options2);
-          var message = options2.message || this.message || "is invalid", pattern = options2.pattern, match;
+          options = v.extend({}, this.options, options);
+          var message = options.message || this.message || "is invalid", pattern = options.pattern, match;
           if (!v.isDefined(value)) {
             return;
           }
@@ -1142,47 +1633,47 @@ var require_validate = __commonJS({
             return message;
           }
           if (v.isString(pattern)) {
-            pattern = new RegExp(options2.pattern, options2.flags);
+            pattern = new RegExp(options.pattern, options.flags);
           }
           match = pattern.exec(value);
           if (!match || match[0].length != value.length) {
             return message;
           }
         },
-        inclusion: function(value, options2) {
+        inclusion: function(value, options) {
           if (!v.isDefined(value)) {
             return;
           }
-          if (v.isArray(options2)) {
-            options2 = { within: options2 };
+          if (v.isArray(options)) {
+            options = { within: options };
           }
-          options2 = v.extend({}, this.options, options2);
-          if (v.contains(options2.within, value)) {
+          options = v.extend({}, this.options, options);
+          if (v.contains(options.within, value)) {
             return;
           }
-          var message = options2.message || this.message || "^%{value} is not included in the list";
+          var message = options.message || this.message || "^%{value} is not included in the list";
           return v.format(message, { value });
         },
-        exclusion: function(value, options2) {
+        exclusion: function(value, options) {
           if (!v.isDefined(value)) {
             return;
           }
-          if (v.isArray(options2)) {
-            options2 = { within: options2 };
+          if (v.isArray(options)) {
+            options = { within: options };
           }
-          options2 = v.extend({}, this.options, options2);
-          if (!v.contains(options2.within, value)) {
+          options = v.extend({}, this.options, options);
+          if (!v.contains(options.within, value)) {
             return;
           }
-          var message = options2.message || this.message || "^%{value} is restricted";
-          if (v.isString(options2.within[value])) {
-            value = options2.within[value];
+          var message = options.message || this.message || "^%{value} is restricted";
+          if (v.isString(options.within[value])) {
+            value = options.within[value];
           }
           return v.format(message, { value });
         },
-        email: v.extend(function(value, options2) {
-          options2 = v.extend({}, this.options, options2);
-          var message = options2.message || this.message || "is not a valid email";
+        email: v.extend(function(value, options) {
+          options = v.extend({}, this.options, options);
+          var message = options.message || this.message || "is not a valid email";
           if (!v.isDefined(value)) {
             return;
           }
@@ -1195,31 +1686,31 @@ var require_validate = __commonJS({
         }, {
           PATTERN: /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/i
         }),
-        equality: function(value, options2, attribute, attributes, globalOptions) {
+        equality: function(value, options, attribute, attributes, globalOptions) {
           if (!v.isDefined(value)) {
             return;
           }
-          if (v.isString(options2)) {
-            options2 = { attribute: options2 };
+          if (v.isString(options)) {
+            options = { attribute: options };
           }
-          options2 = v.extend({}, this.options, options2);
-          var message = options2.message || this.message || "is not equal to %{attribute}";
-          if (v.isEmpty(options2.attribute) || !v.isString(options2.attribute)) {
+          options = v.extend({}, this.options, options);
+          var message = options.message || this.message || "is not equal to %{attribute}";
+          if (v.isEmpty(options.attribute) || !v.isString(options.attribute)) {
             throw new Error("The attribute must be a non empty string");
           }
-          var otherValue = v.getDeepObjectValue(attributes, options2.attribute), comparator = options2.comparator || function(v1, v2) {
-            return v1 === v2;
-          }, prettify = options2.prettify || globalOptions && globalOptions.prettify || v.prettify;
-          if (!comparator(value, otherValue, options2, attribute, attributes)) {
-            return v.format(message, { attribute: prettify(options2.attribute) });
+          var otherValue = v.getDeepObjectValue(attributes, options.attribute), comparator = options.comparator || function(v12, v2) {
+            return v12 === v2;
+          }, prettify = options.prettify || globalOptions && globalOptions.prettify || v.prettify;
+          if (!comparator(value, otherValue, options, attribute, attributes)) {
+            return v.format(message, { attribute: prettify(options.attribute) });
           }
         },
-        url: function(value, options2) {
+        url: function(value, options) {
           if (!v.isDefined(value)) {
             return;
           }
-          options2 = v.extend({}, this.options, options2);
-          var message = options2.message || this.message || "is not a valid url", schemes = options2.schemes || this.schemes || ["http", "https"], allowLocal = options2.allowLocal || this.allowLocal || false, allowDataUrl = options2.allowDataUrl || this.allowDataUrl || false;
+          options = v.extend({}, this.options, options);
+          var message = options.message || this.message || "is not a valid url", schemes = options.schemes || this.schemes || ["http", "https"], allowLocal = options.allowLocal || this.allowLocal || false, allowDataUrl = options.allowDataUrl || this.allowDataUrl || false;
           if (!v.isString(value)) {
             return message;
           }
@@ -1249,8 +1740,8 @@ var require_validate = __commonJS({
           if (!v.isDefined(value)) {
             return;
           }
-          var options2 = v.extend({}, this.options, originalOptions);
-          var type = options2.type;
+          var options = v.extend({}, this.options, originalOptions);
+          var type = options.type;
           if (!v.isDefined(type)) {
             throw new Error("No type was specified");
           }
@@ -1263,8 +1754,8 @@ var require_validate = __commonJS({
           if (!v.isFunction(check)) {
             throw new Error("validate.validators.type.types." + type + " must be a function.");
           }
-          if (!check(value, options2, attribute, attributes, globalOptions)) {
-            var message = originalOptions.message || this.messages[type] || this.message || options2.message || (v.isFunction(type) ? "must be of the correct type" : "must be of type %{type}");
+          if (!check(value, options, attribute, attributes, globalOptions)) {
+            var message = originalOptions.message || this.messages[type] || this.message || options.message || (v.isFunction(type) ? "must be of the correct type" : "must be of type %{type}");
             if (v.isFunction(message)) {
               message = message(value, originalOptions, attribute, attributes, globalOptions);
             }
@@ -1285,7 +1776,7 @@ var require_validate = __commonJS({
           messages: {}
         })
       };
-      validate2.formatters = {
+      validate3.formatters = {
         detailed: function(errors) {
           return errors;
         },
@@ -1309,7 +1800,7 @@ var require_validate = __commonJS({
           return errors;
         }
       };
-      validate2.exposeModule(validate2, this, exports2, module3, define2);
+      validate3.exposeModule(validate3, this, exports2, module3, define2);
     }).call(exports, typeof exports !== "undefined" ? exports : null, typeof module2 !== "undefined" ? module2 : null, typeof define !== "undefined" ? define : null);
   }
 });
@@ -1339,9 +1830,82 @@ var middyfy = (handler) => {
   return (0, import_core.default)(handler).use((0, import_http_json_body_parser.default)());
 };
 
-// src/libs/handlerResolver.ts
-var handlerPath = (context) => {
-  return `${context.split(process.cwd())[1].substring(1).replace(/\\/g, "/")}`;
+// node_modules/uuid/wrapper.mjs
+var import_dist = __toESM(require_dist(), 1);
+var v1 = import_dist.default.v1;
+var v3 = import_dist.default.v3;
+var v4 = import_dist.default.v4;
+var v5 = import_dist.default.v5;
+var NIL = import_dist.default.NIL;
+var version = import_dist.default.version;
+var validate = import_dist.default.validate;
+var stringify = import_dist.default.stringify;
+var parse = import_dist.default.parse;
+
+// src/models/product.model.ts
+var ProductModel = class {
+  constructor({
+    id = v4(),
+    name: name2 = "",
+    sku: sku2 = "",
+    description: description2 = "",
+    price: price2 = 0,
+    stock: stock2 = 0
+  }) {
+    this._id = id;
+    this._name = name2;
+    this._sku = sku2;
+    this._description = description2;
+    this._price = price2;
+    this._stock = stock2;
+  }
+  setId(value) {
+    this._id = value !== "" ? value : null;
+  }
+  getId() {
+    return this._id;
+  }
+  setName(value) {
+    this._name = value !== "" ? value : null;
+  }
+  getName() {
+    return this._name;
+  }
+  setSku(value) {
+    this._sku = value !== "" ? value : null;
+  }
+  getSku() {
+    return this._sku;
+  }
+  setDescription(value) {
+    this._description = value !== "" ? value : null;
+  }
+  getDescription() {
+    return this._description;
+  }
+  setPrice(value) {
+    this._price = value > 0 ? value : null;
+  }
+  getPrice() {
+    return this._price;
+  }
+  setStock(value) {
+    this._stock = value > 0 ? value : null;
+  }
+  getStock() {
+    return this._stock;
+  }
+  getEntityMappings() {
+    return {
+      id: this.getId(),
+      name: this.getName(),
+      sku: this.getSku(),
+      description: this.getDescription(),
+      price: this.getPrice(),
+      stock: this.getStock(),
+      timestamp: new Date().getTime()
+    };
+  }
 };
 
 // src/enums/status-code.enum.ts
@@ -1394,8 +1958,8 @@ var ResponseModel = class {
   }
 };
 
-// src/utils/util.ts
-var import_validate = __toESM(require_validate());
+// src/libs/util.ts
+var import_validate = __toESM(require_validate2());
 var validateAgainstConstraints = (values, constraints) => {
   return new Promise((resolve, reject) => {
     const validation = (0, import_validate.default)(values, constraints);
@@ -1448,20 +2012,45 @@ var create_constraint_default = {
 
 // src/services/database.service.ts
 var AWS = __toESM(require("aws-sdk"));
-var options = {};
-if (process.env.IS_OFFLINE) {
-  options = {
-    region: "localhost",
-    endpoint: "http://localhost:8000"
-  };
+var {
+  STAGE,
+  DYNAMODB_LOCAL_STAGE,
+  DYNAMODB_LOCAL_ACCESS_KEY_ID,
+  DYNAMODB_LOCAL_SECRET_ACCESS_KEY,
+  DYNAMODB_LOCAL_ENDPOINT
+} = process.env;
+var config2 = { region: "eu-west-1" };
+if (STAGE === DYNAMODB_LOCAL_STAGE) {
+  config2.accessKeyId = DYNAMODB_LOCAL_ACCESS_KEY_ID;
+  config2.secretAccessKey = DYNAMODB_LOCAL_SECRET_ACCESS_KEY;
+  config2.endpoint = DYNAMODB_LOCAL_ENDPOINT;
 }
-var documentClient = new AWS.DynamoDB.DocumentClient(options);
+AWS.config.update(config2);
+var documentClient = new AWS.DynamoDB.DocumentClient();
 var DatabaseService = class {
   constructor() {
+    this.getItem = async ({ key, hash, hashValue, tableName }) => {
+      const params = {
+        TableName: tableName,
+        Key: {
+          id: key
+        }
+      };
+      if (hash) {
+        params.Key[hash] = hashValue;
+      }
+      const results = await this.get(params);
+      if (Object.keys(results).length) {
+        return results;
+      }
+      console.error("Item does not exist");
+      throw new ResponseModel({ id: key }, 400 /* BAD_REQUEST */, "Invalid Request!" /* INVALID_REQUEST */);
+    };
     this.create = async (params) => {
       try {
         return await documentClient.put(params).promise();
       } catch (error) {
+        console.error(`create-error: ${error}`);
         throw new ResponseModel({}, 500, `create-error: ${error}`);
       }
     };
@@ -1469,6 +2058,7 @@ var DatabaseService = class {
       try {
         return await documentClient.batchWrite(params).promise();
       } catch (error) {
+        console.error(`batch-write-error: ${error}`);
         throw new ResponseModel({}, 500, `batch-write-error: ${error}`);
       }
     };
@@ -1476,6 +2066,7 @@ var DatabaseService = class {
       try {
         return await documentClient.update(params).promise();
       } catch (error) {
+        console.error(`update-error: ${error}`);
         throw new ResponseModel({}, 500, `update-error: ${error}`);
       }
     };
@@ -1483,13 +2074,19 @@ var DatabaseService = class {
       try {
         return await documentClient.query(params).promise();
       } catch (error) {
+        console.error(`query-error: ${error}`);
         throw new ResponseModel({}, 500, `query-error: ${error}`);
       }
     };
     this.get = async (params) => {
+      console.log("DB GET - STAGE: ", STAGE);
+      console.log("DB GET - params.TableName: ", params.TableName);
+      console.log("DB GET - params.Key: ", params.Key);
       try {
         return await documentClient.get(params).promise();
       } catch (error) {
+        console.error(`get-error - TableName: ${params.TableName}`);
+        console.error(`get-error: ${error}`);
         throw new ResponseModel({}, 500, `get-error: ${error}`);
       }
     };
@@ -1497,6 +2094,7 @@ var DatabaseService = class {
       try {
         return await documentClient.delete(params).promise();
       } catch (error) {
+        console.error(`delete-error: ${error}`);
         throw new ResponseModel({}, 500, `delete-error: ${error}`);
       }
     };
@@ -1504,13 +2102,25 @@ var DatabaseService = class {
 };
 
 // src/functions/product/handler.ts
-console.log(handlerPath(__dirname));
 var create = async (event) => {
   let response;
   return validateAgainstConstraints(event.body, create_constraint_default).then(async () => {
-    console.log(event.body);
     const databaseService = new DatabaseService();
-    return "asd";
+    const productModel = new ProductModel(event.body);
+    const data = productModel.getEntityMappings();
+    const params = {
+      TableName: process.env.PRODUCT_TABLE,
+      Item: {
+        id: data.id,
+        name: data.name,
+        sku: data.sku,
+        description: data.description,
+        price: data.price,
+        stock: data.stock
+      }
+    };
+    await databaseService.create(params);
+    return data.id;
   }).then((listId) => {
     response = new ResponseModel({ listId }, 200, "Product successfully created");
   }).catch((error) => {
@@ -1518,22 +2128,17 @@ var create = async (event) => {
   }).then(() => {
     return response.generate();
   });
-  return formatJSONResponse({
-    message: `Hello , welcome to the exciting Serverless world! your id : ${id}`,
-    event
-  });
 };
-var read = async (event) => {
-  try {
-  } catch (error) {
-    console.log(error);
-  }
+var update = async (event) => {
+  let response;
+  const databaseService = new DatabaseService();
+  const { PRODUCT_TABLE } = process.env;
   return formatJSONResponse({
     message: `read serverless`,
     event
   });
 };
-var update = async (event) => {
+var read = async (event) => {
   try {
   } catch (error) {
     console.log(error);
