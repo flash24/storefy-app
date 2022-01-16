@@ -26,12 +26,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/dev/product",
-					"protocol": "http",
+					"raw": "https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"xh70ad6dhi",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
 					],
-					"port": "3000",
 					"path": [
 						"dev",
 						"product"
@@ -61,12 +64,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/dev/order",
-					"protocol": "http",
+					"raw": "https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"xh70ad6dhi",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
 					],
-					"port": "3000",
 					"path": [
 						"dev",
 						"order"
@@ -88,7 +94,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\":\"f95a1c25-8f57-43c3-98e3-19109091d7ad\",\r\n   \"name\": \"nuevo super product\",\r\n   \"sku\": \"asdas4d5as7d87sda\",\r\n   \"description\": \"new product description\",\r\n   \"price\": 50,\r\n   \"stock\": 1510\r\n}",
+					"raw": "{\r\n    \"id\":\"861c5344-7fd2-49d7-ac5e-c0afe80e349c\",\r\n   \"name\": \"nuevo super product\",\r\n   \"sku\": \"asdas4d5as7d87sda\",\r\n   \"description\": \"new product description\",\r\n   \"price\": 50,\r\n   \"stock\": 1510\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -96,12 +102,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/dev/product",
-					"protocol": "http",
+					"raw": "https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"xh70ad6dhi",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
 					],
-					"port": "3000",
 					"path": [
 						"dev",
 						"product"
@@ -123,7 +132,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"569d3744-587d-495d-ad25-333cfa5ba161\",\r\n    \"items\" : [\r\n        {   \r\n            \"id\": \"f95a1c25-8f57-43c3-98e3-19109091d7ad\",\r\n            \"name\": \"my super product\",\r\n            \"sku\": \"sdf-sd-f-sd-fsdf\",\r\n            \"description\": \"product description\",\r\n            \"price\": 20,\r\n            \"stock\": 200\r\n        },\r\n        {   \r\n            \"id\": \"569d3744-587d-495d-ad25-333cfa5ba161\",\r\n            \"name\": \"other super product\",\r\n            \"sku\": \"sdf-sd-f-sd-fsdf\",\r\n            \"description\": \"product description\",\r\n            \"price\": 20,\r\n            \"stock\": 200\r\n        }\r\n    ],\r\n    \"date\": \"2022/01/01\",\r\n    \"status\":\"PROCESSED\"\r\n\r\n}",
+					"raw": "{\r\n    \"id\": \"a85f8a7a-814f-48a9-96d7-aaf4728f86c9\",\r\n    \"items\" : [\r\n        {   \r\n            \"id\": \"f95a1c25-8f57-43c3-98e3-19109091d7ad\",\r\n            \"name\": \"my super product\",\r\n            \"sku\": \"sdf-sd-f-sd-fsdf\",\r\n            \"description\": \"product description\",\r\n            \"price\": 20,\r\n            \"stock\": 200\r\n        },\r\n        {   \r\n            \"id\": \"569d3744-587d-495d-ad25-333cfa5ba161\",\r\n            \"name\": \"other super product\",\r\n            \"sku\": \"sdf-sd-f-sd-fsdf\",\r\n            \"description\": \"product description\",\r\n            \"price\": 20,\r\n            \"stock\": 200\r\n        }\r\n    ],\r\n    \"date\": \"2022/01/01\",\r\n    \"status\":\"PROCESSED\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -131,12 +140,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/dev/order",
-					"protocol": "http",
+					"raw": "https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"xh70ad6dhi",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
 					],
-					"port": "3000",
 					"path": [
 						"dev",
 						"order"
@@ -158,7 +170,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id\": \"a61b2024-2d39-4ca6-a88e-045f47a520ee\"\r\n\r\n}",
+					"raw": "{\r\n    \"id\": \"a85f8a7a-814f-48a9-96d7-aaf4728f86c9\"\r\n\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -166,12 +178,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/dev/order",
-					"protocol": "http",
+					"raw": "https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"xh70ad6dhi",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
 					],
-					"port": "3000",
 					"path": [
 						"dev",
 						"order"
@@ -182,9 +197,6 @@
 		},
 		{
 			"name": "product-read",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [
@@ -194,22 +206,16 @@
 						"type": "default"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n   \"id\": \"60b5f70f-86ed-4dfe-9448-c32c46fd2366\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:3000/dev/product?id=569d3744-587d-495d-ad25-333cfa5ba161",
-					"protocol": "http",
+					"raw": "https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product?id=861c5344-7fd2-49d7-ac5e-c0afe80e349c",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"xh70ad6dhi",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
 					],
-					"port": "3000",
 					"path": [
 						"dev",
 						"product"
@@ -217,7 +223,7 @@
 					"query": [
 						{
 							"key": "id",
-							"value": "569d3744-587d-495d-ad25-333cfa5ba161"
+							"value": "861c5344-7fd2-49d7-ac5e-c0afe80e349c"
 						}
 					]
 				}
@@ -226,9 +232,6 @@
 		},
 		{
 			"name": "order-read",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [
@@ -238,22 +241,16 @@
 						"type": "default"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n   \"id\": \"60b5f70f-86ed-4dfe-9448-c32c46fd2366\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:3000/dev/order?id=a61b2024-2d39-4ca6-a88e-045f47a520ee",
-					"protocol": "http",
+					"raw": "https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order?id=a85f8a7a-814f-48a9-96d7-aaf4728f86c9",
+					"protocol": "https",
 					"host": [
-						"localhost"
+						"xh70ad6dhi",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
 					],
-					"port": "3000",
 					"path": [
 						"dev",
 						"order"
@@ -261,7 +258,7 @@
 					"query": [
 						{
 							"key": "id",
-							"value": "a61b2024-2d39-4ca6-a88e-045f47a520ee"
+							"value": "a85f8a7a-814f-48a9-96d7-aaf4728f86c9"
 						}
 					]
 				}

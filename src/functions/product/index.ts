@@ -1,4 +1,4 @@
-import { createSchema, updateSchema, readSchema } from "./schema";
+import { createSchema, updateSchema } from "./schema";
 import { handlerPath } from "@libs/handlerResolver";
 const functions = {
   createProduct: {
@@ -24,11 +24,6 @@ const functions = {
         http: {
           method: "get",
           path: "product",
-          request: {
-            schemas: {
-              "application/json": readSchema,
-            },
-          },
         },
       },
     ],

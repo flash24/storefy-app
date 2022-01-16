@@ -101,10 +101,17 @@ const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (e
 }
 const read: ValidatedEventAPIGatewayProxyEvent<typeof readSchema> = async (event) => {
   let response: any;
+  let databaseService : any;
+  let id : string;
   // Initialise database service
-  const databaseService = new DatabaseService();
-  const id: string = event.queryStringParameters.id
   const { PRODUCT_TABLE } = process.env;
+  try {
+    databaseService = new DatabaseService();
+    id = event.queryStringParameters.id
+  } catch (error) {
+    response = (error instanceof ResponseModel) ? error : new ResponseModel({error}, 500, 'invalid request');
+  }
+
   return validateAgainstConstraints({id}, idRequestConstraints).then(() => {
       // Get item from the DynamoDB table
       return databaseService.getItem({ key: id, tableName: PRODUCT_TABLE });
