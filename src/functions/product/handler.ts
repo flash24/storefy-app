@@ -91,7 +91,7 @@ const update: ValidatedEventAPIGatewayProxyEvent<typeof updateSchema> = async (e
     })
     .catch((error) => {
         // Set Error Response
-        response = (error instanceof ResponseModel) ? error : new ResponseModel({}, 500, 'Product cannot be updated');
+        response = (error instanceof ResponseModel) ? error : new ResponseModel({error}, 500, 'Product cannot be updatedted');
     })
     .then(() => {
         // Return API Response

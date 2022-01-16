@@ -41,16 +41,17 @@ const {
     DYNAMODB_LOCAL_STAGE,
     DYNAMODB_LOCAL_ACCESS_KEY_ID,
     DYNAMODB_LOCAL_SECRET_ACCESS_KEY,
-    DYNAMODB_LOCAL_ENDPOINT
+    DYNAMODB_LOCAL_ENDPOINT,
+    REGION
 } = process.env;
 
-const config: IConfig = { region: "eu-west-1" };
+const config: IConfig = { region: REGION };
 if (STAGE === DYNAMODB_LOCAL_STAGE) {
     config.accessKeyId = DYNAMODB_LOCAL_ACCESS_KEY_ID; // local dynamodb accessKeyId
     config.secretAccessKey = DYNAMODB_LOCAL_SECRET_ACCESS_KEY; // local dynamodb secretAccessKey
     config.endpoint = DYNAMODB_LOCAL_ENDPOINT; // local dynamodb endpoint
-    AWS.config.update(config);
 }
+AWS.config.update(config);
 
 const documentClient = new AWS.DynamoDB.DocumentClient();
 
