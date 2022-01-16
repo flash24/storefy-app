@@ -15,13 +15,13 @@ This project has been generated using [Serverless framework](https://www.serverl
 
 ### Remotely
 endpoints:
-  POST - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product
-  GET - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product
-  PUT - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product
-  POST - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
-  GET - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
-  PUT - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
-  PATCH - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
+  - POST - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product
+  - GET - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product
+  - PUT - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product
+  - POST - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
+  - GET - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
+  - PUT - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
+  - PATCH - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
 
 ### Project structure
 
