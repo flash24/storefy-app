@@ -14,7 +14,14 @@ This project has been generated using [Serverless framework](https://www.serverl
 - Run `sls dynamodb install` to init the db local
 
 ### Remotely
-coming soon ..
+endpoints:
+  POST - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product
+  GET - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product
+  PUT - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/product
+  POST - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
+  GET - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
+  PUT - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
+  PATCH - https://xh70ad6dhi.execute-api.us-east-1.amazonaws.com/dev/order
 
 ### Project structure
 

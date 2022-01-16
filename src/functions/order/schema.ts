@@ -1,7 +1,7 @@
 const createSchema = {
   type: "object",
   properties: {
-    items: { type: "array" },
+    items_order: { type: "array" },
     date: { type: "date" },
     status: { type: "string" },
   },
@@ -11,7 +11,7 @@ const updateSchema = {
   type: "object",
   properties: {
     id: { type: "string" },
-    items: { type: "array" },
+    items_order: { type: "array" },
     date: { type: "date" },
     status: { type: "string" },
   },

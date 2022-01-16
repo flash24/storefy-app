@@ -1,4 +1,3 @@
-import { createSchema, updateSchema, readSchema } from "./schema";
 import { handlerPath } from '@libs/handlerResolver';
 const functions = {
   createOrder : {
@@ -8,11 +7,7 @@ const functions = {
         http: {
           method: 'post',
           path: 'order',
-          request: {
-            schemas: {
-              'application/json': createSchema
-            }
-          }
+          cors: true
         }
       }
     ]
@@ -24,11 +19,7 @@ const functions = {
         http: {
           method: 'get',
           path: 'order',
-          request: {
-            schemas: {
-              'application/json': readSchema
-            }
-          }
+          cors: true
         }
       }
     ]
@@ -40,11 +31,7 @@ const functions = {
         http: {
           method: 'put',
           path: 'order',
-          request: {
-            schemas: {
-              'application/json': updateSchema
-            }
-          }
+          cors: true
         }
       }
     ]
@@ -56,11 +43,7 @@ const functions = {
         http: {
           method: 'patch', //patch and not delete because is soft
           path: 'order',
-          request: {
-            schemas: {
-              'application/json': {}
-            }
-          }
+          cors: true
         }
       }
     ]
